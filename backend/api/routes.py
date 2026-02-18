@@ -3,6 +3,7 @@ Project Athena - API Routes
 RESTful API endpoints for the Athena platform
 """
 import os
+from typing import Optional
 from fastapi import APIRouter, HTTPException
 
 from core.graph import identity_graph
