@@ -1,137 +1,137 @@
 name: Project Athena CI/CD
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
 
 env:
-  PYTHON_VERSION: "3.11"
-  NODE_VERSION: "20"
+    PYTHON_VERSION: "3.11"
+    NODE_VERSION: "20"
 
 # ──────────────────────────────────────────────────────────────────────────────
 # BACKEND JOB — lint + test FastAPI service
 # ──────────────────────────────────────────────────────────────────────────────
 jobs:
-  backend:
-    name: Backend — Lint & Test
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
+    backend:
+        name: Backend — Lint & Test
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: backend
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Set up Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: pip
+            - name: Set up Python ${{ env.PYTHON_VERSION }}
+              uses: actions/setup-python@v5
+              with:
+                  python-version: ${{ env.PYTHON_VERSION }}
+                  cache: pip
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+            - name: Install dependencies
+              run: pip install -r requirements.txt
 
-      - name: Lint with Ruff
-        run: |
-          pip install ruff
-          ruff check .
+            - name: Lint with Ruff
+              run: |
+                  pip install ruff
+                  ruff check .
 
-      # Uncomment when you add pytest tests
-      # - name: Run tests
-      #   run: pytest --tb=short
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+            # Uncomment when you add pytest tests
+            # - name: Run tests
+            #   run: pytest --tb=short
+            #   env:
+            #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            #     AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
-# ──────────────────────────────────────────────────────────────────────────────
-# FRONTEND JOB — type-check + build React/Vite app
-# ──────────────────────────────────────────────────────────────────────────────
-  frontend:
-    name: Frontend — Type-check & Build
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
+    # ──────────────────────────────────────────────────────────────────────────────
+    # FRONTEND JOB — type-check + build React/Vite app
+    # ──────────────────────────────────────────────────────────────────────────────
+    frontend:
+        name: Frontend — Type-check & Build
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: frontend
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Set up Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
+            - name: Set up Node ${{ env.NODE_VERSION }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: npm
+                  cache-dependency-path: frontend/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Type-check
-        run: npx tsc --noEmit
+            - name: Type-check
+              run: npx tsc --noEmit
 
-      - name: Build
-        run: npm run build
+            - name: Build
+              run: npm run build
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-dist
-          path: frontend/dist/
-          retention-days: 7
+            - name: Upload build artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: frontend-dist
+                  path: frontend/dist/
+                  retention-days: 7
 
-# ──────────────────────────────────────────────────────────────────────────────
-# DEPLOY JOB — runs only on push to main after both jobs pass
-# Customize the deploy steps below for your target (ECS, EKS, EC2, etc.)
-# ──────────────────────────────────────────────────────────────────────────────
-  deploy:
-    name: Deploy to AWS
-    runs-on: ubuntu-latest
-    needs: [backend, frontend]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # ──────────────────────────────────────────────────────────────────────────────
+    # DEPLOY JOB — runs only on push to main after both jobs pass
+    # Customize the deploy steps below for your target (ECS, EKS, EC2, etc.)
+    # ──────────────────────────────────────────────────────────────────────────────
+    deploy:
+        name: Deploy to AWS
+        runs-on: ubuntu-latest
+        needs: [backend, frontend]
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      # ── Docker image build & push (ECR) ─────────────────────────────────────
-      - name: Log in to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+            # ── Docker image build & push (ECR) ─────────────────────────────────────
+            - name: Log in to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build & push backend image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: project-athena-backend
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./backend
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+            - name: Build & push backend image
+              env:
+                  ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                  ECR_REPOSITORY: project-athena-backend
+                  IMAGE_TAG: ${{ github.sha }}
+              run: |
+                  docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./backend
+                  docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+                  echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
 
-      # ── ECS rolling deploy (uncomment & fill in cluster/service names) ───────
-      # - name: Deploy to ECS
-      #   run: |
-      #     aws ecs update-service \
-      #       --cluster athena-cluster \
-      #       --service athena-backend \
-      #       --force-new-deployment
+            # ── ECS rolling deploy (uncomment & fill in cluster/service names) ───────
+            # - name: Deploy to ECS
+            #   run: |
+            #     aws ecs update-service \
+            #       --cluster athena-cluster \
+            #       --service athena-backend \
+            #       --force-new-deployment
 
-      # ── Alternatively: sync frontend dist to S3 + invalidate CloudFront ──────
-      # - name: Deploy frontend to S3
-      #   run: |
-      #     aws s3 sync frontend/dist/ s3://${{ secrets.S3_BUCKET }} --delete
-      #     aws cloudfront create-invalidation \
-      #       --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} \
-      #       --paths "/*"
+            # ── Alternatively: sync frontend dist to S3 + invalidate CloudFront ──────
+            # - name: Deploy frontend to S3
+            #   run: |
+            #     aws s3 sync frontend/dist/ s3://${{ secrets.S3_BUCKET }} --delete
+            #     aws cloudfront create-invalidation \
+            #       --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} \
+            #       --paths "/*"
