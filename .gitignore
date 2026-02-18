@@ -1,0 +1,41 @@
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+*.env
+!.env.example
+
+# ─── Node / Frontend ──────────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# ─── Terraform ────────────────────────────────────────────────────────────────
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
+
+# ─── IDE / OS ─────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+
+# ─── Secrets / Keys ───────────────────────────────────────────────────────────
+*.pem
+*.key
+*.p12
+*.pfx
