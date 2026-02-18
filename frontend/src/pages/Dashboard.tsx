@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
 import {
-    Users,
-    GitBranch,
     AlertTriangle,
     Activity,
     RefreshCw

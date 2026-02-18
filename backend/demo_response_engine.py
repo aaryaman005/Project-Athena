@@ -34,7 +34,7 @@ if alerts:
     # Show first critical alert
     for alert in alerts:
         if alert.get('severity') in ['CRITICAL', 'HIGH']:
-            print(f"\n🚨 Sample Alert:")
+            print("\n🚨 Sample Alert:")
             print(f"   Severity: {alert.get('severity', 'N/A')}")
             print(f"   Path: {alert.get('source', 'N/A')} → {alert.get('target', 'N/A')}")
             print(f"   Confidence: {alert.get('confidence_score', 0)}")
@@ -56,7 +56,7 @@ if pending:
         print(f"   {i}. {action.get('action_type', 'N/A')}: {action.get('target', 'N/A')}")
     
     # 3. Demonstrate approval and execution
-    print(f"\n⚡ Step 3: Executing Response Plan (Simulation Mode)...")
+    print("\n⚡ Step 3: Executing Response Plan (Simulation Mode)...")
     plan_id = plan.get('plan_id')
     
     if plan_id:
@@ -67,7 +67,7 @@ if pending:
         print(f"   ⚙️ Executed: {execute_result.get('message', 'Done')}")
         
         if execute_result.get('actions_performed'):
-            print(f"\n   Actions Performed:")
+            print("\n   Actions Performed:")
             for action in execute_result['actions_performed'][:3]:
                 print(f"   - {action.get('action_type', 'N/A')}: {action.get('status', 'N/A')}")
 else:

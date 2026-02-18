@@ -1,7 +1,5 @@
 import boto3
 import json
-import random
-import time
 from botocore.exceptions import ClientError
 
 def create_iam_resources():

@@ -1,5 +1,6 @@
 import urllib.request
 import json
+from collections import defaultdict
 
 API_URL = "http://localhost:5000"
 
@@ -33,7 +34,6 @@ print(f"\n✅ Auto-Approved: {len(auto_approved)} ({len(auto_approved)/len(alert
 print(f"👤 Manual Approval Required: {len(manual_only)} ({len(manual_only)/len(alerts)*100:.1f}%)")
 
 # 3. Breakdown by severity
-from collections import defaultdict
 auto_by_severity = defaultdict(int)
 manual_by_severity = defaultdict(int)
 
@@ -67,4 +67,4 @@ print("✅ AUTOMATION IMPACT")
 print("=" * 70)
 print(f"Manual Work Reduced By: {len(auto_approved)/len(alerts)*100:.1f}%")
 print(f"Alerts Requiring Human Review: {len(manual_only)}")
-print(f"\nConfig: CRITICAL ≥ 0.90, HIGH ≥ 0.85 confidence")
+print("\nConfig: CRITICAL ≥ 0.90, HIGH ≥ 0.85 confidence")

@@ -6,7 +6,6 @@ import os
 import boto3
 from botocore.exceptions import ClientError, NoCredentialsError
 from datetime import datetime, timedelta
-from typing import Optional
 
 from core.graph import identity_graph, IdentityNode, NodeType, EdgeType
 from core.metrics import metrics

@@ -1,7 +1,6 @@
 import boto3
 import urllib.request
 import json
-import time
 
 API_URL = "http://localhost:5000"
 

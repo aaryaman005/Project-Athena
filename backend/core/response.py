@@ -360,13 +360,13 @@ class ResponseEngine:
                 action.result = f"Forensic snapshot created for: {action.target}"
             
             elif action.action_type == ActionType.ENABLE_CLOUDTRAIL:
-                action.result = f"CloudTrail logging enabled/verified for account"
+                action.result = "CloudTrail logging enabled/verified for account"
             
             elif action.action_type == ActionType.ENABLE_GUARDDUTY:
-                action.result = f"GuardDuty detector enabled for account"
+                action.result = "GuardDuty detector enabled for account"
             
             elif action.action_type == ActionType.PRESERVE_LOGS:
-                action.result = f"Logs preserved and copied to incident S3 bucket with retention lock"
+                action.result = "Logs preserved and copied to incident S3 bucket with retention lock"
             
             # Alerting & Escalation
             elif action.action_type == ActionType.SEND_EMAIL:
@@ -376,7 +376,7 @@ class ResponseEngine:
                 action.result = f"Incident ticket created: INCIDENT-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
             
             elif action.action_type == ActionType.SEND_SLACK_ALERT:
-                action.result = f"Slack alert sent to #security-incidents channel"
+                action.result = "Slack alert sent to #security-incidents channel"
             
             else:
                 action.result = f"Action type {action.action_type.value} not yet implemented"

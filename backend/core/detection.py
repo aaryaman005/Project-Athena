@@ -2,13 +2,13 @@
 Project Athena - Attack Path Detection Engine
 Graph-based privilege escalation detection using DFS
 """
-import heapq
+
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
 from enum import Enum
 
-from core.graph import identity_graph, EdgeType
+from core.graph import identity_graph
 from core.metrics import metrics
 
 

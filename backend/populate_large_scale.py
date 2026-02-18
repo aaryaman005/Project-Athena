@@ -1,6 +1,5 @@
 import boto3
 import json
-import random
 from botocore.exceptions import ClientError
 
 def create_large_scale_env():
@@ -52,17 +51,23 @@ def create_large_scale_env():
         
         # Determine Group
         group = 'Contractors'
-        if i <= 40: group = 'Engineering'
-        elif i <= 55: group = 'DataScience'
-        elif i <= 65: group = 'Finance'
-        elif i <= 75: group = 'HR'
-        elif i <= 90: group = 'Interns'
-        
+        if i <= 40:
+            group = 'Engineering'
+        elif i <= 55:
+            group = 'DataScience'
+        elif i <= 65:
+            group = 'Finance'
+        elif i <= 75:
+            group = 'HR'
+        elif i <= 90:
+            group = 'Interns'
+
         try:
             iam.create_user(UserName=username)
             iam.create_login_profile(UserName=username, Password='SecurePassword123!')
             iam.add_user_to_group(GroupName=group, UserName=username)
-            if i % 10 == 0: print(f"Created {username} -> {group}")
+            if i % 10 == 0:
+                print(f"Created {username} -> {group}")
         except ClientError:
             pass
 

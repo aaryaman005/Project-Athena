@@ -6,7 +6,7 @@ import random
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
 
-from core.graph import IdentityNode, NodeType, EdgeType
+
 
 
 class MockDataGenerator:
@@ -197,12 +197,18 @@ class MockDataGenerator:
             dept = user.get('department')
             # Map departments to groups
             group_name = None
-            if dept == 'engineering': group_name = 'Engineering'
-            elif dept == 'data_science': group_name = 'DataScience'
-            elif dept == 'finance': group_name = 'Finance'
-            elif dept == 'hr': group_name = 'HR'
-            elif dept == 'interns': group_name = 'Interns'
-            elif dept == 'contractors': group_name = 'Contractors'
+            if dept == 'engineering':
+                group_name = 'Engineering'
+            elif dept == 'data_science':
+                group_name = 'DataScience'
+            elif dept == 'finance':
+                group_name = 'Finance'
+            elif dept == 'hr':
+                group_name = 'HR'
+            elif dept == 'interns':
+                group_name = 'Interns'
+            elif dept == 'contractors':
+                group_name = 'Contractors'
             
             if group_name and group_name in memberships:
                 memberships[group_name].append(user['UserName'])
