@@ -10,7 +10,10 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM nginx:stable-alpine
+FROM nginx:mainline-alpine
+
+# Security patch: upgrade libpng and other packages
+RUN apk update && apk upgrade --no-cache
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
