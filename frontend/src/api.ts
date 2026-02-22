@@ -1,8 +1,7 @@
 /// <reference types="vite/client" />
 import axios from 'axios'
 
-const isProd = import.meta.env.PROD
-const API_BASE = import.meta.env.VITE_API_BASE_URL || (isProd ? '' : 'http://localhost:5000')
+const API_BASE = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000')
 
 // Create axios instance for cleaner configuration
 const client = axios.create({
