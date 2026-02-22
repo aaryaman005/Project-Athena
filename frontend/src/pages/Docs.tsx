@@ -1,4 +1,3 @@
-import { useRef, useLayoutEffect } from 'react'
 import {
     Shield,
     Target,
