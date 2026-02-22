@@ -12,6 +12,15 @@ const client = axios.create({
     }
 })
 
+// Add token to requests
+client.interceptors.request.use((config) => {
+    const token = localStorage.getItem('athena_token')
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+})
+
 // Global error interceptor
 client.interceptors.response.use(
     (response) => response,
