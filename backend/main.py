@@ -47,23 +47,6 @@ app.mount("/metrics", metrics_app)
 app.include_router(router, prefix="/api")
 
 # Root endpoint
-@app.get("/")
-def root():
-    return {
-        "name": "Project Athena",
-        "description": "Cloud Identity Attack Path Detection Platform",
-        "version": "1.0.0",
-        "status": "operational"
-    }
-
-# Health check
-@app.get("/health")
-def health():
-    return {
-        "status": "healthy",
-        "service": "athena-core",
-        "uptime_seconds": int(time.time() - metrics.start_time)
-    }
 
 if __name__ == "__main__":
     import uvicorn

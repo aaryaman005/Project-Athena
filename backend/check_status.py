@@ -1,7 +1,7 @@
 import requests
 
 try:
-    resp = requests.get("http://localhost:5000/health")
+    resp = requests.get("http://localhost:5000/api/health")
     print(f"Health: {resp.json()}")
     
     resp = requests.get("http://localhost:5000/api/graph/stats")

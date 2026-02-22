@@ -34,7 +34,7 @@ client.interceptors.response.use(
 export const api = {
     // Health & Status
     async getHealth() {
-        const res = await client.get('/health')
+        const res = await client.get('/api/health')
         return res.data
     },
 

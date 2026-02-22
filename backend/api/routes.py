@@ -3,6 +3,7 @@ Project Athena - API Routes
 RESTful API endpoints for the Athena platform
 """
 import os
+import time
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -13,6 +14,7 @@ from core.aws_ingester import aws_ingester
 from core.detection import detection_engine
 from core.response import response_engine
 from core.audit import audit_logger
+from core.metrics import metrics
 
 
 router = APIRouter()
@@ -278,3 +280,15 @@ def rollback_action(action_id: str, current_user: dict = Depends(get_current_use
 def get_audit_logs():
     """Get system audit logs"""
     return {"logs": audit_logger.get_logs()}
+
+
+# ============ Health Endpoint ============
+
+@router.get("/health")
+def health():
+    """Get system health and uptime"""
+    return {
+        "status": "healthy",
+        "service": "athena-core",
+        "uptime_seconds": int(time.time() - metrics.start_time)
+    }
