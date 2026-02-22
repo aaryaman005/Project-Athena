@@ -167,107 +167,131 @@ function Dashboard() {
             {/* Content Layer (Above Background) */}
             <div style={{ position: 'relative', zIndex: 1, paddingBottom: '4rem' }}>
                 {/* Minimal Header */}
-                <div className="page-header" ref={headerRef} style={{ marginBottom: '3rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-                        <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                                <div style={{
-                                    background: 'var(--accent-purple)',
-                                    padding: '0.5rem',
-                                    borderRadius: '8px',
-                                    boxShadow: '0 0 20px rgba(82, 39, 255, 0.4)'
-                                }}>
-                                    <Shield size={20} color="white" />
-                                </div>
-                                <span style={{
-                                    fontSize: '0.75rem',
-                                    fontWeight: 700,
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.2em',
-                                    color: 'var(--accent-purple)'
-                                }}>Command Center</span>
-                            </div>
-                            <h1 className="page-title" style={{ fontSize: '2.5rem', letterSpacing: '-0.03em', margin: 0 }}>System Overview</h1>
-                        </div>
-
-                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                            {/* Telemetry Minimal */}
-                            <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', marginRight: '1rem', borderRight: '1px solid var(--border-color)', paddingRight: '1.5rem' }}>
-                                {['CPU', 'MEM', 'NET'].map((label, idx) => (
-                                    <div key={label} style={{ textAlign: 'right' }}>
-                                        <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 700 }}>{label}</div>
-                                        <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                                            {Object.values(load)[idx]}%
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Quick Action Center - MOVED HERE FOR VISIBILITY */}
-                            <div style={{ display: 'flex', gap: '0.75rem' }}>
-                                <button
-                                    onClick={handleIngest}
-                                    disabled={ingesting}
-                                    style={{
-                                        padding: '0.6rem 1rem',
-                                        background: 'rgba(82, 39, 255, 0.15)',
-                                        border: '1px solid rgba(82, 39, 255, 0.4)',
-                                        borderRadius: '8px',
-                                        color: 'white',
-                                        fontSize: '0.8rem',
-                                        fontWeight: 600,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '0.5rem',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s'
-                                    }}
-                                    className="hover-bright"
-                                >
-                                    <RefreshCw size={14} className={ingesting ? 'spinning' : ''} />
-                                    {ingesting ? 'INGESTING...' : 'INGEST DATA'}
-                                </button>
-
-                                <button
-                                    onClick={handleScan}
-                                    style={{
-                                        padding: '0.6rem 1rem',
-                                        background: 'rgba(251, 191, 36, 0.15)',
-                                        border: '1px solid rgba(251, 191, 36, 0.4)',
-                                        borderRadius: '8px',
-                                        color: 'white',
-                                        fontSize: '0.8rem',
-                                        fontWeight: 600,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '0.5rem',
-                                        cursor: 'pointer'
-                                    }}
-                                    className="hover-bright"
-                                >
-                                    <Zap size={14} color="#fbbf24" />
-                                    SCAN
-                                </button>
-                            </div>
-
-                            <div className="status-indicator" style={{
-                                background: 'rgba(255,255,255,0.03)',
-                                border: '1px solid var(--border-color)',
-                                padding: '0.5rem 1rem',
-                                borderRadius: '100px',
-                                marginLeft: '1rem'
+                {/* Header & Risk Score Section */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2rem', marginBottom: '3rem' }}>
+                    <div className="page-header" ref={headerRef} style={{ marginBottom: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                            <div style={{
+                                background: 'var(--accent-purple)',
+                                padding: '0.5rem',
+                                borderRadius: '8px',
+                                boxShadow: '0 0 20px rgba(82, 39, 255, 0.4)'
                             }}>
-                                <span className="status-dot" style={{
-                                    width: '8px',
-                                    height: '8px',
-                                    background: stats.health === 'healthy' ? 'var(--accent-green)' : 'var(--accent-red)',
-                                    boxShadow: stats.health === 'healthy' ? '0 0 10px var(--accent-green)' : '0 0 10px var(--accent-red)'
-                                }} />
-                                <span style={{ fontWeight: 600, fontSize: '0.75rem' }}>
-                                    {stats.health === 'healthy' ? 'OPERATIONAL' : 'CRITICAL'}
-                                </span>
+                                <Shield size={20} color="white" />
+                            </div>
+                            <span style={{
+                                fontSize: '0.75rem',
+                                fontWeight: 700,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.2em',
+                                color: 'var(--accent-purple)'
+                            }}>Command Center</span>
+                        </div>
+                        <h1 className="page-title" style={{ fontSize: '2.5rem', letterSpacing: '-0.03em', margin: 0 }}>System Overview</h1>
+                        <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Real-time identity security posture and threat intelligence.</p>
+                    </div>
+
+                    {/* Global Risk Score Gauge */}
+                    <div className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.03)' }}>
+                        <div style={{ position: 'relative', width: '120px', height: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <svg width="120" height="120" viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
+                                <circle
+                                    cx="60"
+                                    cy="60"
+                                    r="54"
+                                    fill="none"
+                                    stroke={stats.alerts > 10 ? 'var(--accent-red)' : stats.alerts > 0 ? 'var(--accent-yellow)' : 'var(--accent-green)'}
+                                    strokeWidth="8"
+                                    strokeDasharray="339.29"
+                                    strokeDashoffset={339.29 * (1 - Math.min(stats.alerts * 10, 100) / 100)}
+                                    strokeLinecap="round"
+                                    style={{ transition: 'stroke-dashoffset 1s ease-out' }}
+                                />
+                            </svg>
+                            <div style={{ position: 'absolute', textAlign: 'center' }}>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'white' }}>{Math.min(stats.alerts * 10, 100)}</div>
+                                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 700 }}>RISK SCORE</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                {/* Header Actions & Status */}
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '2.5rem', justifyContent: 'flex-end', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
+                    {/* Telemetry Minimal */}
+                    <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', marginRight: '1rem', borderRight: '1px solid var(--border-color)', paddingRight: '1.5rem' }}>
+                        {['CPU', 'MEM', 'NET'].map((label, idx) => (
+                            <div key={label} style={{ textAlign: 'right' }}>
+                                <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 700 }}>{label}</div>
+                                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                                    {Object.values(load)[idx]}%
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '0.75rem' }}>
+                        <button
+                            onClick={handleIngest}
+                            disabled={ingesting}
+                            className="hover-bright"
+                            style={{
+                                padding: '0.6rem 1rem',
+                                background: 'rgba(82, 39, 255, 0.15)',
+                                border: '1px solid rgba(82, 39, 255, 0.4)',
+                                borderRadius: '8px',
+                                color: 'white',
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            <RefreshCw size={14} className={ingesting ? 'spinning' : ''} />
+                            {ingesting ? 'INGESTING...' : 'INGEST DATA'}
+                        </button>
+
+                        <button
+                            onClick={handleScan}
+                            className="hover-bright"
+                            style={{
+                                padding: '0.6rem 1rem',
+                                background: 'rgba(251, 191, 36, 0.15)',
+                                border: '1px solid rgba(251, 191, 36, 0.4)',
+                                borderRadius: '8px',
+                                color: 'white',
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            <Zap size={14} color="#fbbf24" />
+                            SCAN
+                        </button>
+                    </div>
+
+                    <div className="status-indicator" style={{
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid var(--border-color)',
+                        padding: '0.5rem 1rem',
+                        borderRadius: '100px',
+                        marginLeft: '1rem'
+                    }}>
+                        <span className="status-dot" style={{
+                            width: '8px',
+                            height: '8px',
+                            background: stats.health === 'healthy' ? 'var(--accent-green)' : 'var(--accent-red)',
+                            boxShadow: stats.health === 'healthy' ? '0 0 10px var(--accent-green)' : '0 0 10px var(--accent-red)'
+                        }} />
+                        <span style={{ fontWeight: 600, fontSize: '0.75rem' }}>
+                            {stats.health === 'healthy' ? 'OPERATIONAL' : 'CRITICAL'}
+                        </span>
                     </div>
                 </div>
 
@@ -344,23 +368,42 @@ function Dashboard() {
                             <Shield size={18} color="var(--accent-purple)" />
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                            <div style={{ padding: '1.25rem', background: 'rgba(82, 39, 255, 0.05)', borderRadius: '12px', border: '1px solid rgba(82, 39, 255, 0.2)' }}>
-                                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                    <Shield size={16} color="var(--accent-purple)" />
+                            <div style={{ padding: '1rem', background: 'rgba(82, 39, 255, 0.05)', borderRadius: '12px', border: '1px solid rgba(82, 39, 255, 0.2)' }}>
+                                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginBottom: '0.4rem' }}>
+                                    <Shield size={14} color="var(--accent-purple)" />
                                     <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'white' }}>Spartan Defense Active</span>
                                 </div>
-                                <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, margin: 0 }}>
-                                    Automated response protocols are active. Critical threats will be mitigated autonomously based on confidence thresholds.
+                                <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4, margin: 0 }}>
+                                    Automated response protocols are active. Critical threats will be mitigated autonomously.
                                 </p>
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Telemetry Stream</div>
-                                <div style={{ display: 'flex', gap: '1rem' }}>
-                                    {['Auth Success', 'API Traffic', 'Detection Rate'].map(l => (
-                                        <div key={l} style={{ flex: 1, padding: '0.75rem', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-                                            <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{l}</div>
-                                            <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>99.9%</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Active Attack Paths</div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    {[
+                                        { path: 'Intern → Maintenance → ProdEC2', risk: 'High' },
+                                        { path: 'ReadOnly → AnalyticsAdmin → DataExfil', risk: 'Medium' }
+                                    ].map((p, i) => (
+                                        <div key={i} style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '0.75rem',
+                                            background: 'rgba(255,255,255,0.02)',
+                                            borderRadius: '8px',
+                                            border: '1px solid var(--border-color)',
+                                            fontSize: '0.75rem'
+                                        }}>
+                                            <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{p.path}</span>
+                                            <span style={{
+                                                fontSize: '0.65rem',
+                                                padding: '2px 6px',
+                                                borderRadius: '4px',
+                                                background: p.risk === 'High' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)',
+                                                color: p.risk === 'High' ? 'var(--accent-red)' : 'var(--accent-yellow)',
+                                                border: `1px solid ${p.risk === 'High' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(245, 158, 11, 0.2)'}`
+                                            }}>{p.risk}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -371,35 +414,37 @@ function Dashboard() {
                     {/* Infrastructure */}
                     <div className="card">
                         <div className="card-header" style={{ marginBottom: '1.5rem' }}>
-                            <h3 className="card-title">Infrastructure</h3>
+                            <h3 className="card-title">Identity Distribution</h3>
+                            <Globe size={18} color="var(--accent-purple)" />
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border-color)' }}>
-                                <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>Version</span>
-                                <span style={{ fontWeight: 600, fontSize: '0.8rem' }}>v2.4.0 SPARTAN</span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border-color)' }}>
-                                <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>Uptime</span>
-                                <span style={{ fontWeight: 600, fontSize: '0.8rem' }}>{Math.floor(stats.uptime / 60)}m {stats.uptime % 60}s</span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border-color)' }}>
-                                <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>Node Count</span>
-                                <span style={{ fontWeight: 600, fontSize: '0.8rem' }}>{stats.totalNodes} Active</span>
-                            </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            {[
+                                { label: 'IAM Users', count: Math.floor(stats.identities * 0.7), color: 'var(--accent-purple)' },
+                                { label: 'IAM Roles', count: Math.floor(stats.identities * 0.2), color: 'var(--accent-blue)' },
+                                { label: 'IAM Groups', count: Math.ceil(stats.identities * 0.1), color: 'var(--accent-green)' }
+                            ].map((item, i) => (
+                                <div key={i}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.75rem' }}>
+                                        <span style={{ color: 'var(--text-secondary)' }}>{item.label}</span>
+                                        <span style={{ fontWeight: 700 }}>{item.count}</span>
+                                    </div>
+                                    <div style={{ height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                                        <div style={{
+                                            height: '100%',
+                                            width: `${(item.count / stats.identities) * 100}%`,
+                                            background: item.color,
+                                            boxShadow: `0 0 10px ${item.color}`
+                                        }} />
+                                    </div>
+                                </div>
+                            ))}
 
-                            <div style={{ marginTop: '0.5rem' }}>
-                                <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.5rem', fontWeight: 700 }}>API Endpoint</div>
-                                <code style={{
-                                    display: 'block',
-                                    padding: '0.75rem',
-                                    background: 'var(--bg-secondary)',
-                                    borderRadius: '6px',
-                                    fontSize: '0.75rem',
-                                    color: 'var(--accent-purple)',
-                                    border: '1px solid var(--border-color)'
-                                }}>
-                                    athena-core.internal:5000
-                                </code>
+                            <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
+                                <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.5rem', fontWeight: 700 }}>Uptime & Health</div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
+                                    <span style={{ color: 'var(--text-secondary)' }}>Session Uptime</span>
+                                    <span style={{ fontWeight: 600 }}>{Math.floor(stats.uptime / 60)}m {stats.uptime % 60}s</span>
+                                </div>
                             </div>
                         </div>
                     </div>

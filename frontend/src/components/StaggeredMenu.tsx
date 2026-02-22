@@ -6,7 +6,8 @@ import { Link, useLocation } from 'react-router-dom';
 interface MenuItem {
     label: string;
     ariaLabel: string;
-    link: string;
+    link?: string;
+    onClick?: () => void;
 }
 
 interface SocialItem {
@@ -52,6 +53,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     onMenuClose
 }) => {
     const location = useLocation();
+    console.log('[StaggeredMenu] Render. Items count:', items.length, 'Items:', items);
     const [open, setOpen] = useState(false);
     const openRef = useRef(false);
     const panelRef = useRef<HTMLDivElement>(null);
@@ -428,7 +430,16 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                         {items && items.length ? (
                             items.map((it, idx) => (
                                 <li className="sm-panel-itemWrap" key={it.label + idx}>
-                                    <Link className="sm-panel-item" to={it.link} aria-label={it.ariaLabel} data-index={idx + 1}>
+                                    <Link
+                                        className="sm-panel-item"
+                                        to={it.link || '#'}
+                                        aria-label={it.ariaLabel}
+                                        data-index={idx + 1}
+                                        onClick={(e) => {
+                                            if (!it.link) e.preventDefault();
+                                            if (it.onClick) it.onClick();
+                                        }}
+                                    >
                                         <span className="sm-panel-itemLabel">{it.label}</span>
                                     </Link>
                                 </li>

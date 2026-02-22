@@ -7,9 +7,18 @@ interface LayoutProps {
 }
 
 function Layout({ children }: LayoutProps) {
-    const { user } = useAuth()
+    const { user, logout } = useAuth()
 
     const menuItems = [
+        {
+            label: 'Logout',
+            ariaLabel: 'Sign out of Athena',
+            onClick: () => {
+                if (window.confirm('Are you sure you want to sign out?')) {
+                    logout()
+                }
+            }
+        },
         { label: 'Dashboard', ariaLabel: 'Security overview', link: '/' },
         { label: 'Graph Explorer', ariaLabel: 'Identity and attack path graph', link: '/graph' },
         { label: 'Attack Alerts', ariaLabel: 'View detected threats', link: '/alerts' },
