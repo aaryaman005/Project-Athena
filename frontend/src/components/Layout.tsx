@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+import StaggeredMenu from './StaggeredMenu'
 import { useAuth } from '../context/AuthContext'
 
 interface LayoutProps {
