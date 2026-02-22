@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ForceGraph3D from 'react-force-graph-3d'
 import * as THREE from 'three'
-import { X } from 'lucide-react'
+import { X, Search } from 'lucide-react'
 import { api } from '../api'
 
 interface GraphNode {
@@ -33,6 +33,8 @@ function GraphExplorer() {
     const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null)
     const [highlightNodes, setHighlightNodes] = useState<Set<string>>(new Set())
     const [highlightLinks, setHighlightLinks] = useState<Set<any>>(new Set())
+    const [searchQuery, setSearchQuery] = useState('')
+    const [riskIndex, setRiskIndex] = useState(-1)
     const fgRef = useRef<any>(null)
 
     // Parse attack path from URL
@@ -96,12 +98,12 @@ function GraphExplorer() {
             // Zoom to fit the attack path after a delay
             setTimeout(() => {
                 if (fgRef.current) {
-                    fgRef.current.zoomToFit(600, 80)
+                    fgRef.current.zoomToFit(1000, 150)
                 }
             }, 1000)
         } else if (fgRef.current && graphData.nodes.length > 0) {
             setTimeout(() => {
-                fgRef.current.zoomToFit(400, 50)
+                fgRef.current.zoomToFit(1200, 120)
             }, 800)
         }
     }, [attackPath, graphData])
@@ -176,6 +178,37 @@ function GraphExplorer() {
     const handleZoomToFit = () => {
         if (fgRef.current) fgRef.current.zoomToFit(750, 100)
     }
+
+    const focusOnNode = useCallback((node: GraphNode) => {
+        if (!fgRef.current) return
+        const distance = 160
+        const distRatio = 1 + distance / Math.hypot(node.x || 1, node.y || 1, node.z || 1)
+        fgRef.current.cameraPosition(
+            { x: (node.x || 0) * distRatio, y: (node.y || 0) * distRatio, z: (node.z || 0) * distRatio },
+            node,
+            1200
+        )
+        setSelectedNode(node)
+    }, [])
+
+    const handleNextRisk = () => {
+        const highRiskNodes = graphData.nodes
+            .filter(n => n.privilege_level > 70 || (attackPath && attackPath.includes(n.id)))
+            .sort((a, b) => b.privilege_level - a.privilege_level)
+
+        if (highRiskNodes.length === 0) return
+
+        const nextIdx = (riskIndex + 1) % highRiskNodes.length
+        setRiskIndex(nextIdx)
+        focusOnNode(highRiskNodes[nextIdx])
+    }
+
+    const filteredSearchResults = useMemo(() => {
+        if (!searchQuery) return []
+        return graphData.nodes
+            .filter(n => n.name.toLowerCase().includes(searchQuery.toLowerCase()))
+            .slice(0, 5)
+    }, [searchQuery, graphData.nodes])
 
     // Custom 3D node objects
     const nodeThreeObject = useCallback((node: GraphNode) => {
@@ -310,7 +343,63 @@ function GraphExplorer() {
                 <button className="btn btn-secondary" onClick={handleZoomToFit} style={{ padding: '0.5rem 1rem' }}>
                     Center
                 </button>
-                <button className="btn btn-primary" onClick={fetchGraph} style={{ padding: '0.5rem 1rem' }}>
+                <button className="btn btn-primary" onClick={handleNextRisk} style={{
+                    padding: '0.5rem 1rem',
+                    background: 'linear-gradient(90deg, #ef4444, #f59e0b)',
+                    border: 'none'
+                }}>
+                    Next Risk
+                </button>
+
+                {/* Node Search */}
+                <div style={{ position: 'relative' }}>
+                    <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
+                    <input
+                        type="text"
+                        placeholder="Search identities..."
+                        className="input"
+                        style={{ height: '40px', paddingLeft: '35px', width: '220px', background: 'rgba(15, 23, 42, 0.4)' }}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    {filteredSearchResults.length > 0 && (
+                        <div style={{
+                            position: 'absolute',
+                            top: '100%',
+                            left: 0,
+                            right: 0,
+                            background: 'rgba(10, 14, 26, 0.95)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: '8px',
+                            marginTop: '0.5rem',
+                            overflow: 'hidden',
+                            zIndex: 50
+                        }}>
+                            {filteredSearchResults.map(node => (
+                                <div
+                                    key={node.id}
+                                    onClick={() => {
+                                        focusOnNode(node)
+                                        setSearchQuery('')
+                                    }}
+                                    style={{
+                                        padding: '0.6rem 1rem',
+                                        cursor: 'pointer',
+                                        fontSize: '0.85rem',
+                                        borderBottom: '1px solid rgba(255,255,255,0.05)',
+                                        transition: 'background 0.2s'
+                                    }}
+                                    className="search-result-item"
+                                >
+                                    <div style={{ fontWeight: 600 }}>{node.name}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{node.type}</div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                <button className="btn btn-secondary" onClick={fetchGraph} style={{ padding: '0.5rem 1rem' }}>
                     Refresh
                 </button>
             </div>
@@ -472,24 +561,26 @@ function GraphExplorer() {
                     if (highlightLinks.has(link)) return '#ef4444'
                     return 'rgba(148, 163, 184, 0.4)'
                 }}
-                linkWidth={(link: any) => highlightLinks.has(link) ? 4 : 2}
-                linkDirectionalArrowLength={5}
+                linkWidth={(link: any) => highlightLinks.has(link) ? 5 : 2}
+                linkDirectionalArrowLength={6}
                 linkDirectionalArrowRelPos={1}
-                linkCurvature={0.2}
-                linkOpacity={0.8}
-                linkDirectionalParticles={(link: any) => highlightLinks.has(link) ? 5 : 2}
-                linkDirectionalParticleWidth={3}
-                linkDirectionalParticleSpeed={0.015}
-                linkDirectionalParticleColor={(link: any) => highlightLinks.has(link) ? '#ef4444' : '#3b82f6'}
+                linkCurvature={0.25}
+                linkOpacity={0.7}
+                linkDirectionalParticles={(link: any) => highlightLinks.has(link) ? 8 : 1}
+                linkDirectionalParticleWidth={4}
+                linkDirectionalParticleSpeed={0.02}
+                linkDirectionalParticleColor={(link: any) => highlightLinks.has(link) ? '#ef4444' : '#60a5fa'}
                 backgroundColor="rgba(0,0,0,0)"
                 enableNodeDrag={true}
-                d3AlphaDecay={0.02}
-                d3VelocityDecay={0.4}
-                d3AlphaMin={0.001}
-                warmupTicks={50}
+                d3AlphaDecay={0.01}
+                d3VelocityDecay={0.3}
+                forceEngine="d3"
+                numDimensions={3}
                 cooldownTicks={100}
-                dagMode={undefined}
-                dagLevelDistance={30}
+                onEngineStop={() => {
+                    // One final zoom to fit after the simulation stabilizes
+                    if (fgRef.current) fgRef.current.zoomToFit(1000, 100)
+                }}
             />
         </div>
     )

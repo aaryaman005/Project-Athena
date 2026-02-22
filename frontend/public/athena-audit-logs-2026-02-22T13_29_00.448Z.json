@@ -1,0 +1,1568 @@
+[
+  {
+    "id": "LOG-000174",
+    "timestamp": "2026-02-22T18:58:22.323622",
+    "action": "plan_approval",
+    "actor": "human_analyst",
+    "target": "RP-000005",
+    "status": "approved",
+    "details": null
+  },
+  {
+    "id": "LOG-000173",
+    "timestamp": "2026-02-22T18:58:20.406202",
+    "action": "plan_approval",
+    "actor": "human_analyst",
+    "target": "RP-000002",
+    "status": "approved",
+    "details": null
+  },
+  {
+    "id": "LOG-000172",
+    "timestamp": "2026-02-22T18:55:26.217913",
+    "action": "attack_scan",
+    "actor": "system_admin",
+    "target": null,
+    "status": "success",
+    "details": "Detected 94 attack paths."
+  },
+  {
+    "id": "LOG-000171",
+    "timestamp": "2026-02-22T18:55:26.217794",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000094",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000170",
+    "timestamp": "2026-02-22T18:55:26.217639",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000093",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000169",
+    "timestamp": "2026-02-22T18:55:26.217501",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000092",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000168",
+    "timestamp": "2026-02-22T18:55:26.217337",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000091",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000167",
+    "timestamp": "2026-02-22T18:55:26.217205",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000090",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000166",
+    "timestamp": "2026-02-22T18:55:26.217072",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000089",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000165",
+    "timestamp": "2026-02-22T18:55:26.216869",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000088",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000164",
+    "timestamp": "2026-02-22T18:55:26.216714",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000087",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000163",
+    "timestamp": "2026-02-22T18:55:26.216568",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000086",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000162",
+    "timestamp": "2026-02-22T18:55:26.216445",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000085",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000161",
+    "timestamp": "2026-02-22T18:55:26.216308",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000084",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000160",
+    "timestamp": "2026-02-22T18:55:26.216148",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000083",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000159",
+    "timestamp": "2026-02-22T18:55:26.216002",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000082",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000158",
+    "timestamp": "2026-02-22T18:55:26.215863",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000081",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000157",
+    "timestamp": "2026-02-22T18:55:26.215719",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000080",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000156",
+    "timestamp": "2026-02-22T18:55:26.215596",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000079",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000155",
+    "timestamp": "2026-02-22T18:55:26.215438",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000078",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000154",
+    "timestamp": "2026-02-22T18:55:26.215280",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000077",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000153",
+    "timestamp": "2026-02-22T18:55:26.215091",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000076",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000152",
+    "timestamp": "2026-02-22T18:55:26.214952",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000075",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000151",
+    "timestamp": "2026-02-22T18:55:26.214814",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000074",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000150",
+    "timestamp": "2026-02-22T18:55:26.214665",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000073",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000149",
+    "timestamp": "2026-02-22T18:55:26.214529",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000072",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000148",
+    "timestamp": "2026-02-22T18:55:26.214370",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000071",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000147",
+    "timestamp": "2026-02-22T18:55:26.214207",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000070",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000146",
+    "timestamp": "2026-02-22T18:55:26.214047",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000069",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000145",
+    "timestamp": "2026-02-22T18:55:26.213886",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000068",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000144",
+    "timestamp": "2026-02-22T18:55:26.213739",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000067",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000143",
+    "timestamp": "2026-02-22T18:55:26.213619",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000066",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000142",
+    "timestamp": "2026-02-22T18:55:26.213472",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000065",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000141",
+    "timestamp": "2026-02-22T18:55:26.213338",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000064",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000140",
+    "timestamp": "2026-02-22T18:55:26.213181",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000063",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000139",
+    "timestamp": "2026-02-22T18:55:26.212999",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000062",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000138",
+    "timestamp": "2026-02-22T18:55:26.212754",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000061",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000137",
+    "timestamp": "2026-02-22T18:55:26.212594",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000060",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000136",
+    "timestamp": "2026-02-22T18:55:26.212427",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000059",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000135",
+    "timestamp": "2026-02-22T18:55:26.212188",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000058",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000134",
+    "timestamp": "2026-02-22T18:55:26.212027",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000057",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000133",
+    "timestamp": "2026-02-22T18:55:26.211871",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000056",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000132",
+    "timestamp": "2026-02-22T18:55:26.211701",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000055",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000131",
+    "timestamp": "2026-02-22T18:55:26.211563",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000054",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000130",
+    "timestamp": "2026-02-22T18:55:26.211438",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000053",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000129",
+    "timestamp": "2026-02-22T18:55:26.211332",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000052",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000128",
+    "timestamp": "2026-02-22T18:55:26.211224",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000051",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000127",
+    "timestamp": "2026-02-22T18:55:26.211100",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000050",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000126",
+    "timestamp": "2026-02-22T18:55:26.210932",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000049",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000125",
+    "timestamp": "2026-02-22T18:55:26.210780",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000048",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000124",
+    "timestamp": "2026-02-22T18:55:26.210639",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000047",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000123",
+    "timestamp": "2026-02-22T18:55:26.210483",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000046",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000122",
+    "timestamp": "2026-02-22T18:55:26.210294",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000045",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000121",
+    "timestamp": "2026-02-22T18:55:26.210143",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000044",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000120",
+    "timestamp": "2026-02-22T18:55:26.209990",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000043",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000119",
+    "timestamp": "2026-02-22T18:55:26.209864",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000042",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000118",
+    "timestamp": "2026-02-22T18:55:26.209732",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000041",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000117",
+    "timestamp": "2026-02-22T18:55:26.209608",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000040",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000116",
+    "timestamp": "2026-02-22T18:55:26.209461",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000039",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000115",
+    "timestamp": "2026-02-22T18:55:26.209311",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000038",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000114",
+    "timestamp": "2026-02-22T18:55:26.209163",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000037",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000113",
+    "timestamp": "2026-02-22T18:55:26.209029",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000036",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000112",
+    "timestamp": "2026-02-22T18:55:26.208889",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000035",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000111",
+    "timestamp": "2026-02-22T18:55:26.208705",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000034",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000110",
+    "timestamp": "2026-02-22T18:55:26.208547",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000033",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000109",
+    "timestamp": "2026-02-22T18:55:26.208415",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000032",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000108",
+    "timestamp": "2026-02-22T18:55:26.208265",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000031",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000107",
+    "timestamp": "2026-02-22T18:55:26.208108",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000030",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000106",
+    "timestamp": "2026-02-22T18:55:26.207961",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000029",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000105",
+    "timestamp": "2026-02-22T18:55:26.207797",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000028",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000104",
+    "timestamp": "2026-02-22T18:55:26.207632",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000027",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000103",
+    "timestamp": "2026-02-22T18:55:26.207493",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000026",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000102",
+    "timestamp": "2026-02-22T18:55:26.207156",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000025",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000101",
+    "timestamp": "2026-02-22T18:55:26.206998",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000024",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000100",
+    "timestamp": "2026-02-22T18:55:26.206860",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000023",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000099",
+    "timestamp": "2026-02-22T18:55:26.206669",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000022",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000098",
+    "timestamp": "2026-02-22T18:55:26.206519",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000021",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000097",
+    "timestamp": "2026-02-22T18:55:26.206339",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000020",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000096",
+    "timestamp": "2026-02-22T18:55:26.206128",
+    "action": "plan_execution",
+    "actor": "system_autonomous",
+    "target": "RP-000019",
+    "status": "success",
+    "details": "Executed 7 actions."
+  },
+  {
+    "id": "LOG-000095",
+    "timestamp": "2026-02-22T18:55:26.205987",
+    "action": "action_complete:send_slack_alert",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "success",
+    "details": "Successfully completed action: Slack alert sent to #security-incidents channel"
+  },
+  {
+    "id": "LOG-000094",
+    "timestamp": "2026-02-22T18:55:26.205834",
+    "action": "action_start:send_slack_alert",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "in_progress",
+    "details": "Starting SOAR action: send_slack_alert"
+  },
+  {
+    "id": "LOG-000093",
+    "timestamp": "2026-02-22T18:55:26.205685",
+    "action": "action_complete:notify_soc",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "success",
+    "details": "Successfully completed action: SOC notified about: user:employee_003"
+  },
+  {
+    "id": "LOG-000092",
+    "timestamp": "2026-02-22T18:55:26.205583",
+    "action": "action_start:notify_soc",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "in_progress",
+    "details": "Starting SOAR action: notify_soc"
+  },
+  {
+    "id": "LOG-000091",
+    "timestamp": "2026-02-22T18:55:26.205490",
+    "action": "action_complete:enable_cloudtrail",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "success",
+    "details": "Successfully completed action: CloudTrail logging enabled/verified for account"
+  },
+  {
+    "id": "LOG-000090",
+    "timestamp": "2026-02-22T18:55:26.205399",
+    "action": "action_start:enable_cloudtrail",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "in_progress",
+    "details": "Starting SOAR action: enable_cloudtrail"
+  },
+  {
+    "id": "LOG-000089",
+    "timestamp": "2026-02-22T18:55:26.205269",
+    "action": "action_complete:tag_resource",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "success",
+    "details": "Successfully completed action: Resource tagged with: security_incident=true, timestamp=2026-02-22T18:55:26.205259"
+  },
+  {
+    "id": "LOG-000088",
+    "timestamp": "2026-02-22T18:55:26.205156",
+    "action": "action_start:tag_resource",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "in_progress",
+    "details": "Starting SOAR action: tag_resource"
+  },
+  {
+    "id": "LOG-000087",
+    "timestamp": "2026-02-22T18:55:26.204925",
+    "action": "action_failed:disable_access_key",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "failed",
+    "details": "Error: An error occurred (InvalidClientTokenId) when calling the ListAccessKeys operation: The security token included in the request is invalid."
+  },
+  {
+    "id": "LOG-000086",
+    "timestamp": "2026-02-22T18:55:25.997127",
+    "action": "action_start:disable_access_key",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "in_progress",
+    "details": "Starting SOAR action: disable_access_key"
+  },
+  {
+    "id": "LOG-000085",
+    "timestamp": "2026-02-22T18:55:25.997002",
+    "action": "action_complete:detach_policy",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "success",
+    "details": "Successfully completed action: Manual intervention required: Detach dangerous policies from employee_003"
+  },
+  {
+    "id": "LOG-000084",
+    "timestamp": "2026-02-22T18:55:25.996883",
+    "action": "action_start:detach_policy",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "in_progress",
+    "details": "Starting SOAR action: detach_policy"
+  },
+  {
+    "id": "LOG-000083",
+    "timestamp": "2026-02-22T18:55:25.996679",
+    "action": "action_failed:revoke_sessions",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "failed",
+    "details": "Error: An error occurred (InvalidClientTokenId) when calling the PutUserPolicy operation: The security token included in the request is invalid."
+  },
+  {
+    "id": "LOG-000082",
+    "timestamp": "2026-02-22T18:55:25.765926",
+    "action": "action_start:revoke_sessions",
+    "actor": "system_autonomous",
+    "target": "user:employee_003",
+    "status": "in_progress",
+    "details": "Starting SOAR action: revoke_sessions"
+  },
+  {
+    "id": "LOG-000081",
+    "timestamp": "2026-02-22T18:55:25.765830",
+    "action": "plan_created_auto",
+    "actor": "system_engine",
+    "target": "RP-000019",
+    "status": "success",
+    "details": "Autonomous plan created for high alert."
+  },
+  {
+    "id": "LOG-000080",
+    "timestamp": "2026-02-22T18:55:25.765686",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000018",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000079",
+    "timestamp": "2026-02-22T18:55:25.765542",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000017",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000078",
+    "timestamp": "2026-02-22T18:55:25.765413",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000016",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000077",
+    "timestamp": "2026-02-22T18:55:25.765284",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000015",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000076",
+    "timestamp": "2026-02-22T18:55:25.765147",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000014",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000075",
+    "timestamp": "2026-02-22T18:55:25.765007",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000013",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000074",
+    "timestamp": "2026-02-22T18:55:25.764852",
+    "action": "plan_execution",
+    "actor": "system_autonomous",
+    "target": "RP-000012",
+    "status": "success",
+    "details": "Executed 7 actions."
+  },
+  {
+    "id": "LOG-000073",
+    "timestamp": "2026-02-22T18:55:25.764752",
+    "action": "action_complete:send_slack_alert",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "success",
+    "details": "Successfully completed action: Slack alert sent to #security-incidents channel"
+  },
+  {
+    "id": "LOG-000072",
+    "timestamp": "2026-02-22T18:55:25.764661",
+    "action": "action_start:send_slack_alert",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: send_slack_alert"
+  },
+  {
+    "id": "LOG-000071",
+    "timestamp": "2026-02-22T18:55:25.764519",
+    "action": "action_complete:notify_soc",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "success",
+    "details": "Successfully completed action: SOC notified about: user:employee_002"
+  },
+  {
+    "id": "LOG-000070",
+    "timestamp": "2026-02-22T18:55:25.764433",
+    "action": "action_start:notify_soc",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: notify_soc"
+  },
+  {
+    "id": "LOG-000069",
+    "timestamp": "2026-02-22T18:55:25.764314",
+    "action": "action_complete:enable_cloudtrail",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "success",
+    "details": "Successfully completed action: CloudTrail logging enabled/verified for account"
+  },
+  {
+    "id": "LOG-000068",
+    "timestamp": "2026-02-22T18:55:25.764205",
+    "action": "action_start:enable_cloudtrail",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: enable_cloudtrail"
+  },
+  {
+    "id": "LOG-000067",
+    "timestamp": "2026-02-22T18:55:25.764069",
+    "action": "action_complete:tag_resource",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "success",
+    "details": "Successfully completed action: Resource tagged with: security_incident=true, timestamp=2026-02-22T18:55:25.764061"
+  },
+  {
+    "id": "LOG-000066",
+    "timestamp": "2026-02-22T18:55:25.763969",
+    "action": "action_start:tag_resource",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: tag_resource"
+  },
+  {
+    "id": "LOG-000065",
+    "timestamp": "2026-02-22T18:55:25.763785",
+    "action": "action_failed:disable_access_key",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "failed",
+    "details": "Error: An error occurred (InvalidClientTokenId) when calling the ListAccessKeys operation: The security token included in the request is invalid."
+  },
+  {
+    "id": "LOG-000064",
+    "timestamp": "2026-02-22T18:55:25.554968",
+    "action": "action_start:disable_access_key",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: disable_access_key"
+  },
+  {
+    "id": "LOG-000063",
+    "timestamp": "2026-02-22T18:55:25.554853",
+    "action": "action_complete:detach_policy",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "success",
+    "details": "Successfully completed action: Manual intervention required: Detach dangerous policies from employee_002"
+  },
+  {
+    "id": "LOG-000062",
+    "timestamp": "2026-02-22T18:55:25.554766",
+    "action": "action_start:detach_policy",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: detach_policy"
+  },
+  {
+    "id": "LOG-000061",
+    "timestamp": "2026-02-22T18:55:25.554590",
+    "action": "action_failed:revoke_sessions",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "failed",
+    "details": "Error: An error occurred (InvalidClientTokenId) when calling the PutUserPolicy operation: The security token included in the request is invalid."
+  },
+  {
+    "id": "LOG-000060",
+    "timestamp": "2026-02-22T18:55:25.334655",
+    "action": "action_start:revoke_sessions",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: revoke_sessions"
+  },
+  {
+    "id": "LOG-000059",
+    "timestamp": "2026-02-22T18:55:25.334567",
+    "action": "plan_created_auto",
+    "actor": "system_engine",
+    "target": "RP-000012",
+    "status": "success",
+    "details": "Autonomous plan created for high alert."
+  },
+  {
+    "id": "LOG-000058",
+    "timestamp": "2026-02-22T18:55:25.334434",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000011",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000057",
+    "timestamp": "2026-02-22T18:55:25.334252",
+    "action": "plan_execution",
+    "actor": "system_autonomous",
+    "target": "RP-000010",
+    "status": "success",
+    "details": "Executed 7 actions."
+  },
+  {
+    "id": "LOG-000056",
+    "timestamp": "2026-02-22T18:55:25.334146",
+    "action": "action_complete:send_slack_alert",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "success",
+    "details": "Successfully completed action: Slack alert sent to #security-incidents channel"
+  },
+  {
+    "id": "LOG-000055",
+    "timestamp": "2026-02-22T18:55:25.334067",
+    "action": "action_start:send_slack_alert",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: send_slack_alert"
+  },
+  {
+    "id": "LOG-000054",
+    "timestamp": "2026-02-22T18:55:25.333946",
+    "action": "action_complete:notify_soc",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "success",
+    "details": "Successfully completed action: SOC notified about: user:employee_002"
+  },
+  {
+    "id": "LOG-000053",
+    "timestamp": "2026-02-22T18:55:25.333862",
+    "action": "action_start:notify_soc",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: notify_soc"
+  },
+  {
+    "id": "LOG-000052",
+    "timestamp": "2026-02-22T18:55:25.333766",
+    "action": "action_complete:enable_cloudtrail",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "success",
+    "details": "Successfully completed action: CloudTrail logging enabled/verified for account"
+  },
+  {
+    "id": "LOG-000051",
+    "timestamp": "2026-02-22T18:55:25.333675",
+    "action": "action_start:enable_cloudtrail",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: enable_cloudtrail"
+  },
+  {
+    "id": "LOG-000050",
+    "timestamp": "2026-02-22T18:55:25.333539",
+    "action": "action_complete:tag_resource",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "success",
+    "details": "Successfully completed action: Resource tagged with: security_incident=true, timestamp=2026-02-22T18:55:25.333530"
+  },
+  {
+    "id": "LOG-000049",
+    "timestamp": "2026-02-22T18:55:25.333443",
+    "action": "action_start:tag_resource",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: tag_resource"
+  },
+  {
+    "id": "LOG-000048",
+    "timestamp": "2026-02-22T18:55:25.333250",
+    "action": "action_failed:disable_access_key",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "failed",
+    "details": "Error: An error occurred (InvalidClientTokenId) when calling the ListAccessKeys operation: The security token included in the request is invalid."
+  },
+  {
+    "id": "LOG-000047",
+    "timestamp": "2026-02-22T18:55:25.102186",
+    "action": "action_start:disable_access_key",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: disable_access_key"
+  },
+  {
+    "id": "LOG-000046",
+    "timestamp": "2026-02-22T18:55:25.102062",
+    "action": "action_complete:detach_policy",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "success",
+    "details": "Successfully completed action: Manual intervention required: Detach dangerous policies from employee_002"
+  },
+  {
+    "id": "LOG-000045",
+    "timestamp": "2026-02-22T18:55:25.101963",
+    "action": "action_start:detach_policy",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: detach_policy"
+  },
+  {
+    "id": "LOG-000044",
+    "timestamp": "2026-02-22T18:55:25.101711",
+    "action": "action_failed:revoke_sessions",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "failed",
+    "details": "Error: An error occurred (InvalidClientTokenId) when calling the PutUserPolicy operation: The security token included in the request is invalid."
+  },
+  {
+    "id": "LOG-000043",
+    "timestamp": "2026-02-22T18:55:24.896409",
+    "action": "action_start:revoke_sessions",
+    "actor": "system_autonomous",
+    "target": "user:employee_002",
+    "status": "in_progress",
+    "details": "Starting SOAR action: revoke_sessions"
+  },
+  {
+    "id": "LOG-000042",
+    "timestamp": "2026-02-22T18:55:24.896304",
+    "action": "plan_created_auto",
+    "actor": "system_engine",
+    "target": "RP-000010",
+    "status": "success",
+    "details": "Autonomous plan created for high alert."
+  },
+  {
+    "id": "LOG-000041",
+    "timestamp": "2026-02-22T18:55:24.896139",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000009",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000040",
+    "timestamp": "2026-02-22T18:55:24.896001",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000008",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000039",
+    "timestamp": "2026-02-22T18:55:24.895879",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000007",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000038",
+    "timestamp": "2026-02-22T18:55:24.895717",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000006",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000037",
+    "timestamp": "2026-02-22T18:55:24.895556",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000005",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000036",
+    "timestamp": "2026-02-22T18:55:24.895403",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000004",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000035",
+    "timestamp": "2026-02-22T18:55:24.895206",
+    "action": "plan_execution",
+    "actor": "system_autonomous",
+    "target": "RP-000003",
+    "status": "success",
+    "details": "Executed 7 actions."
+  },
+  {
+    "id": "LOG-000034",
+    "timestamp": "2026-02-22T18:55:24.895097",
+    "action": "action_complete:send_slack_alert",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "success",
+    "details": "Successfully completed action: Slack alert sent to #security-incidents channel"
+  },
+  {
+    "id": "LOG-000033",
+    "timestamp": "2026-02-22T18:55:24.895010",
+    "action": "action_start:send_slack_alert",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: send_slack_alert"
+  },
+  {
+    "id": "LOG-000032",
+    "timestamp": "2026-02-22T18:55:24.894886",
+    "action": "action_complete:notify_soc",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "success",
+    "details": "Successfully completed action: SOC notified about: user:employee_001"
+  },
+  {
+    "id": "LOG-000031",
+    "timestamp": "2026-02-22T18:55:24.894777",
+    "action": "action_start:notify_soc",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: notify_soc"
+  },
+  {
+    "id": "LOG-000030",
+    "timestamp": "2026-02-22T18:55:24.894642",
+    "action": "action_complete:enable_cloudtrail",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "success",
+    "details": "Successfully completed action: CloudTrail logging enabled/verified for account"
+  },
+  {
+    "id": "LOG-000029",
+    "timestamp": "2026-02-22T18:55:24.894535",
+    "action": "action_start:enable_cloudtrail",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: enable_cloudtrail"
+  },
+  {
+    "id": "LOG-000028",
+    "timestamp": "2026-02-22T18:55:24.894417",
+    "action": "action_complete:tag_resource",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "success",
+    "details": "Successfully completed action: Resource tagged with: security_incident=true, timestamp=2026-02-22T18:55:24.894407"
+  },
+  {
+    "id": "LOG-000027",
+    "timestamp": "2026-02-22T18:55:24.894304",
+    "action": "action_start:tag_resource",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: tag_resource"
+  },
+  {
+    "id": "LOG-000026",
+    "timestamp": "2026-02-22T18:55:24.894013",
+    "action": "action_failed:disable_access_key",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "failed",
+    "details": "Error: An error occurred (InvalidClientTokenId) when calling the ListAccessKeys operation: The security token included in the request is invalid."
+  },
+  {
+    "id": "LOG-000025",
+    "timestamp": "2026-02-22T18:55:24.673999",
+    "action": "action_start:disable_access_key",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: disable_access_key"
+  },
+  {
+    "id": "LOG-000024",
+    "timestamp": "2026-02-22T18:55:24.673879",
+    "action": "action_complete:detach_policy",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "success",
+    "details": "Successfully completed action: Manual intervention required: Detach dangerous policies from employee_001"
+  },
+  {
+    "id": "LOG-000023",
+    "timestamp": "2026-02-22T18:55:24.673750",
+    "action": "action_start:detach_policy",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: detach_policy"
+  },
+  {
+    "id": "LOG-000022",
+    "timestamp": "2026-02-22T18:55:24.673507",
+    "action": "action_failed:revoke_sessions",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "failed",
+    "details": "Error: An error occurred (InvalidClientTokenId) when calling the PutUserPolicy operation: The security token included in the request is invalid."
+  },
+  {
+    "id": "LOG-000021",
+    "timestamp": "2026-02-22T18:55:24.437122",
+    "action": "action_start:revoke_sessions",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: revoke_sessions"
+  },
+  {
+    "id": "LOG-000020",
+    "timestamp": "2026-02-22T18:55:24.437023",
+    "action": "plan_created_auto",
+    "actor": "system_engine",
+    "target": "RP-000003",
+    "status": "success",
+    "details": "Autonomous plan created for high alert."
+  },
+  {
+    "id": "LOG-000019",
+    "timestamp": "2026-02-22T18:55:24.436860",
+    "action": "plan_created_pending",
+    "actor": "system_engine",
+    "target": "RP-000002",
+    "status": "pending",
+    "details": "Plan requires human approval due to high impact."
+  },
+  {
+    "id": "LOG-000018",
+    "timestamp": "2026-02-22T18:55:24.436597",
+    "action": "plan_execution",
+    "actor": "system_autonomous",
+    "target": "RP-000001",
+    "status": "success",
+    "details": "Executed 7 actions."
+  },
+  {
+    "id": "LOG-000017",
+    "timestamp": "2026-02-22T18:55:24.436424",
+    "action": "action_complete:send_slack_alert",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "success",
+    "details": "Successfully completed action: Slack alert sent to #security-incidents channel"
+  },
+  {
+    "id": "LOG-000016",
+    "timestamp": "2026-02-22T18:55:24.436297",
+    "action": "action_start:send_slack_alert",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: send_slack_alert"
+  },
+  {
+    "id": "LOG-000015",
+    "timestamp": "2026-02-22T18:55:24.436183",
+    "action": "action_complete:notify_soc",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "success",
+    "details": "Successfully completed action: SOC notified about: user:employee_001"
+  },
+  {
+    "id": "LOG-000014",
+    "timestamp": "2026-02-22T18:55:24.436091",
+    "action": "action_start:notify_soc",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: notify_soc"
+  },
+  {
+    "id": "LOG-000013",
+    "timestamp": "2026-02-22T18:55:24.435978",
+    "action": "action_complete:enable_cloudtrail",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "success",
+    "details": "Successfully completed action: CloudTrail logging enabled/verified for account"
+  },
+  {
+    "id": "LOG-000012",
+    "timestamp": "2026-02-22T18:55:24.435832",
+    "action": "action_start:enable_cloudtrail",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: enable_cloudtrail"
+  },
+  {
+    "id": "LOG-000011",
+    "timestamp": "2026-02-22T18:55:24.435668",
+    "action": "action_complete:tag_resource",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "success",
+    "details": "Successfully completed action: Resource tagged with: security_incident=true, timestamp=2026-02-22T18:55:24.435657"
+  },
+  {
+    "id": "LOG-000010",
+    "timestamp": "2026-02-22T18:55:24.435537",
+    "action": "action_start:tag_resource",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: tag_resource"
+  },
+  {
+    "id": "LOG-000009",
+    "timestamp": "2026-02-22T18:55:24.435223",
+    "action": "action_failed:disable_access_key",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "failed",
+    "details": "Error: An error occurred (InvalidClientTokenId) when calling the ListAccessKeys operation: The security token included in the request is invalid."
+  },
+  {
+    "id": "LOG-000008",
+    "timestamp": "2026-02-22T18:55:24.222736",
+    "action": "action_start:disable_access_key",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: disable_access_key"
+  },
+  {
+    "id": "LOG-000007",
+    "timestamp": "2026-02-22T18:55:24.222589",
+    "action": "action_complete:detach_policy",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "success",
+    "details": "Successfully completed action: Manual intervention required: Detach dangerous policies from employee_001"
+  },
+  {
+    "id": "LOG-000006",
+    "timestamp": "2026-02-22T18:55:24.222467",
+    "action": "action_start:detach_policy",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: detach_policy"
+  },
+  {
+    "id": "LOG-000005",
+    "timestamp": "2026-02-22T18:55:24.222174",
+    "action": "action_failed:revoke_sessions",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "failed",
+    "details": "Error: An error occurred (InvalidClientTokenId) when calling the PutUserPolicy operation: The security token included in the request is invalid."
+  },
+  {
+    "id": "LOG-000004",
+    "timestamp": "2026-02-22T18:55:22.715023",
+    "action": "action_start:revoke_sessions",
+    "actor": "system_autonomous",
+    "target": "user:employee_001",
+    "status": "in_progress",
+    "details": "Starting SOAR action: revoke_sessions"
+  },
+  {
+    "id": "LOG-000003",
+    "timestamp": "2026-02-22T18:55:22.713791",
+    "action": "plan_created_auto",
+    "actor": "system_engine",
+    "target": "RP-000001",
+    "status": "success",
+    "details": "Autonomous plan created for high alert."
+  },
+  {
+    "id": "LOG-000002",
+    "timestamp": "2026-02-22T18:55:15.371823",
+    "action": "aws_ingest",
+    "actor": "system_admin",
+    "target": null,
+    "status": "success",
+    "details": "Ingested 155 nodes and 150 edges."
+  },
+  {
+    "id": "LOG-000001",
+    "timestamp": "2026-02-22T18:55:13.696302",
+    "action": "aws_ingest",
+    "actor": "system_admin",
+    "target": null,
+    "status": "success",
+    "details": "Ingested 151 nodes and 141 edges."
+  }
+]

@@ -1,0 +1,7 @@
+{
+    "admin": {
+        "username": "admin",
+        "hashed_password": "$2b$12$KjuBBdyHH003ct4giczbXe774z2mhzaEG6zGNtDCJraQzHVHg6.ve",
+        "role": "admin"
+    }
+}

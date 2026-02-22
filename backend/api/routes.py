@@ -3,16 +3,40 @@ Project Athena - API Routes
 RESTful API endpoints for the Athena platform
 """
 import os
+import traceback
 from typing import Optional
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from core.auth import auth_manager
 
 from core.graph import identity_graph
 from core.aws_ingester import aws_ingester
 from core.detection import detection_engine
 from core.response import response_engine
+from core.audit import audit_logger
 
 
 router = APIRouter()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    payload = auth_manager.verify_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    return payload
+
+# ============ Auth Endpoints ============
+
+@router.post("/auth/login")
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = auth_manager.get_user(form_data.username)
+    if not user or not auth_manager.verify_password(form_data.password, user["hashed_password"]):
+        raise HTTPException(status_code=401, detail="Incorrect username or password")
+    
+    access_token = auth_manager.create_access_token(
+        data={"sub": user["username"], "role": user["role"]}
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
 # ============ Graph Endpoints ============
@@ -66,10 +90,16 @@ def get_identity(identity_id: str):
 # ============ AWS Ingestion Endpoints ============
 
 @router.post("/ingest/aws")
-def ingest_aws_data():
+def ingest_aws_data(current_user: dict = Depends(get_current_user)):
     """Ingest live IAM data from AWS account"""
     try:
         results = aws_ingester.ingest_all()
+        audit_logger.log(
+            action="aws_ingest",
+            actor="system_admin",
+            status="success",
+            details=f"Ingested {results.get('total_nodes', 0)} nodes and {results.get('total_edges', 0)} edges."
+        )
         return {
             "status": "success",
             "ingested": results
@@ -98,11 +128,17 @@ def get_cloudtrail_events(hours: int = 24):
 # ============ Detection Endpoints ============
 
 @router.post("/detect/scan")
-def scan_for_attacks(start_node: Optional[str] = None, min_delta: int = 20):
+def scan_for_attacks(start_node: Optional[str] = None, min_delta: int = 20, current_user: dict = Depends(get_current_user)):
     """Scan for privilege escalation attack paths"""
     paths = detection_engine.find_escalation_paths(
         start_node=start_node,
         min_privilege_delta=min_delta
+    )
+    audit_logger.log(
+        action="attack_scan",
+        actor="system_admin",
+        status="success",
+        details=f"Detected {len(paths)} attack paths."
     )
     return {
         "status": "scan_complete",
@@ -151,7 +187,7 @@ def get_response_history():
 
 
 @router.post("/response/approve/{plan_id}")
-def approve_response(plan_id: str):
+def approve_response(plan_id: str, current_user: dict = Depends(get_current_user)):
     """Approve a pending response plan"""
     result = response_engine.approve_plan(plan_id)
     if "error" in result:
@@ -160,7 +196,7 @@ def approve_response(plan_id: str):
 
 
 @router.post("/response/reject/{plan_id}")
-def reject_response(plan_id: str, reason: str = "Rejected by analyst"):
+def reject_response(plan_id: str, reason: str = "Rejected by analyst", current_user: dict = Depends(get_current_user)):
     """Reject a pending response plan"""
     result = response_engine.reject_plan(plan_id, reason)
     if "error" in result:
@@ -169,7 +205,7 @@ def reject_response(plan_id: str, reason: str = "Rejected by analyst"):
 
 
 @router.post("/response/execute/{plan_id}")
-def execute_response(plan_id: str):
+def execute_response(plan_id: str, current_user: dict = Depends(get_current_user)):
     """Execute an approved response plan"""
     result = response_engine.execute_plan(plan_id)
     if "error" in result:
@@ -178,9 +214,23 @@ def execute_response(plan_id: str):
 
 
 @router.post("/response/rollback/{action_id}")
-def rollback_action(action_id: str):
+def rollback_action(action_id: str, current_user: dict = Depends(get_current_user)):
     """Rollback a previously executed action"""
     result = response_engine.rollback_action(action_id)
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
+    
+    audit_logger.log(
+        action="action_rollback",
+        actor="system_admin",
+        target=action_id,
+        status="success"
+    )
     return result
+
+# ============ Audit Endpoints ============
+
+@router.get("/audit/logs")
+def get_audit_logs():
+    """Get system audit logs"""
+    return {"logs": audit_logger.get_logs()}

@@ -7,5 +7,5 @@ variable "aws_region" {
 variable "user_count" {
   description = "Number of users to create"
   type        = number
-  default     = 100
+  default     = 300
 }

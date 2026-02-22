@@ -133,7 +133,7 @@ class DetectionEngine:
         
         return paths
     
-    def _get_low_privilege_nodes(self, threshold: int = 30) -> list[str]:
+    def _get_low_privilege_nodes(self, threshold: int = 50) -> list[str]:
         """Get all nodes with privilege level below threshold"""
         low_priv = []
         graph_data = identity_graph.to_dict()

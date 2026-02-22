@@ -149,5 +149,80 @@ resource "aws_iam_role_policy_attachment" "analytics_misconfig" {
 }
 
 
+# === Attack Path 3: The Rogue DevOps Trace ===
+# DevOps User -> assumes DevSecOpsRole -> assumes CloudAdmin -> Full Control
+
+resource "aws_iam_role" "devsecops_role" {
+  name = "DevSecOpsRole"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "devsecops_privs" {
+  name = "DevSecOpsPrivs"
+  role = aws_iam_role.devsecops_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Resource = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/CloudAdmin"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "cloud_admin" {
+  name = "CloudAdmin"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/DevSecOpsRole"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "cloud_admin_full" {
+  role       = aws_iam_role.cloud_admin.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+# Attach AssumeDevSecOps policy to DevOps group
+resource "aws_iam_policy" "assume_devsecops" {
+  name = "AssumeDevSecOps"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = "sts:AssumeRole"
+        Effect   = "Allow"
+        Resource = aws_iam_role.devsecops_role.arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_group_policy_attachment" "devops_escalation" {
+  group      = aws_iam_group.devops.name
+  policy_arn = aws_iam_policy.assume_devsecops.arn
+}
+
 # === Data Source for Account ID ===
 data "aws_caller_identity" "current" {}

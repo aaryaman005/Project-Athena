@@ -1,19 +1,20 @@
 :root {
-  --bg-primary: #0a0e1a;
-  --bg-secondary: #111827;
-  --bg-tertiary: #1e293b;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --bg-primary: #050505;
+  --bg-secondary: #0d0d0e;
+  --bg-tertiary: #161618;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.4);
   --accent-blue: #3b82f6;
-  --accent-purple: #8b5cf6;
+  --accent-purple: #5227FF;
   --accent-cyan: #06b6d4;
   --accent-green: #10b981;
-  --accent-yellow: #f59e0b;
-  --accent-red: #ef4444;
-  --border-color: #334155;
-  --glass-bg: rgba(30, 41, 59, 0.7);
-  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.4);
+  --accent-yellow: #fbbf24;
+  --accent-red: #f43f5e;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(13, 13, 14, 0.8);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.5);
+  --card-radius: 12px;
 }
 
 * {
@@ -128,11 +129,17 @@ body {
 
 /* Cards */
 .card {
-  background: var(--glass-bg);
+  background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 1.5rem;
-  backdrop-filter: blur(10px);
+  border-radius: var(--card-radius);
+  padding: 2rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .card-header {
@@ -157,28 +164,39 @@ body {
 }
 
 .stat-card {
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 1.5rem;
+  border-radius: var(--card-radius);
+  padding: 2rem;
   position: relative;
   overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-purple);
 }
 
 .stat-label {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
 }
 
 .stat-value {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 800;
   color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
 .stat-value.critical {
   color: var(--accent-red);
+  text-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
 }
 
 .stat-value.warning {
@@ -190,7 +208,7 @@ body {
 }
 
 .stat-value.info {
-  color: var(--accent-blue);
+  color: var(--accent-cyan);
 }
 
 /* Alert Cards */

@@ -9,6 +9,7 @@ from enum import Enum
 
 from core.detection import AttackPath, Severity
 from core.metrics import metrics
+from core.audit import audit_logger
 
 
 class ActionType(Enum):
@@ -139,9 +140,28 @@ class ResponseEngine:
         if attack_path.auto_response_eligible:
             # Execute immediately if auto-approved
             self._response_history.append(plan)
+            
+            audit_logger.log(
+                action="plan_created_auto",
+                actor="system_engine",
+                target=plan_id,
+                status="success",
+                details=f"Autonomous plan created for {attack_path.severity.value} alert."
+            )
+            
+            # CRITICAL FIX: Actually execute the plan so it performs actions and logs them!
+            self.execute_plan_internal(plan, actor="system_autonomous")
         else:
             # Queue for human approval
             self._pending_approvals.append(plan)
+            
+            audit_logger.log(
+                action="plan_created_pending",
+                actor="system_engine",
+                target=plan_id,
+                status="pending",
+                details=f"Plan requires human approval due to high impact."
+            )
         
         return plan
     
@@ -231,8 +251,7 @@ class ResponseEngine:
     
     def execute_plan(self, plan_id: str) -> dict:
         """
-        Execute a response plan.
-        Only executes if auto-approved or human-approved.
+        Execute a response plan manually by an analyst.
         """
         plan = self._find_plan(plan_id)
         if not plan:
@@ -241,19 +260,33 @@ class ResponseEngine:
         if not plan.auto_approved and not plan.human_approved:
             return {"error": "Plan requires human approval"}
         
+        return self.execute_plan_internal(plan, actor="system_admin")
+
+    def execute_plan_internal(self, plan: ResponsePlan, actor: str) -> dict:
+        """
+        Core execution logic for response plans.
+        """
         results = []
         for action in plan.actions:
-            result = self._execute_action(action)
+            result = self._execute_action(action, actor=actor)
             results.append(result)
             metrics.record_response(action.action_type.value)
         
+        audit_logger.log(
+            action="plan_execution",
+            actor=actor,
+            target=plan.plan_id,
+            status="success",
+            details=f"Executed {len(results)} actions."
+        )
+        
         return {
-            "plan_id": plan_id,
+            "plan_id": plan.plan_id,
             "executed": len(results),
             "results": results
         }
     
-    def _execute_action(self, action: ResponseAction) -> dict:
+    def _execute_action(self, action: ResponseAction, actor: str = "system_engine") -> dict:
         """
         Execute a single response action.
         Calls the AWS Remediator to perform actual changes.
@@ -262,6 +295,14 @@ class ResponseEngine:
         
         action.status = ActionStatus.IN_PROGRESS
         action.executed_at = datetime.now()
+        
+        audit_logger.log(
+            action=f"action_start:{action.action_type.value}",
+            actor=actor,
+            target=action.target,
+            status="in_progress",
+            details=f"Starting SOAR action: {action.action_type.value}"
+        )
         
         try:
             if action.action_type == ActionType.DISABLE_USER:
@@ -383,9 +424,25 @@ class ResponseEngine:
             
             action.status = ActionStatus.COMPLETED
             
+            audit_logger.log(
+                action=f"action_complete:{action.action_type.value}",
+                actor=actor,
+                target=action.target,
+                status="success",
+                details=f"Successfully completed action: {action.result}"
+            )
+            
         except Exception as e:
             action.status = ActionStatus.FAILED
             action.result = f"Error: {str(e)}"
+            
+            audit_logger.log(
+                action=f"action_failed:{action.action_type.value}",
+                actor=actor,
+                target=action.target,
+                status="failed",
+                details=action.result
+            )
         
         return action.to_dict()
     
@@ -398,6 +455,13 @@ class ResponseEngine:
         plan.human_approved = True
         self._pending_approvals.remove(plan)
         self._response_history.append(plan)
+        
+        audit_logger.log(
+            action="plan_approval",
+            actor="human_analyst",
+            target=plan_id,
+            status="approved"
+        )
         
         return {
             "plan_id": plan_id,
@@ -412,6 +476,14 @@ class ResponseEngine:
             return {"error": "Plan not found in pending approvals"}
         
         self._pending_approvals.remove(plan)
+        
+        audit_logger.log(
+            action="plan_rejection",
+            actor="human_analyst",
+            target=plan_id,
+            status="rejected",
+            details=reason
+        )
         
         return {
             "plan_id": plan_id,

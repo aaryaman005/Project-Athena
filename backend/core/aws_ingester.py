@@ -3,13 +3,20 @@ Project Athena - AWS IAM Integration
 Live data ingestion from AWS IAM and CloudTrail, with mock data support
 """
 import os
+import json
 import boto3
+import logging
 from botocore.exceptions import ClientError, NoCredentialsError
 from datetime import datetime, timedelta
 
 from core.graph import identity_graph, IdentityNode, NodeType, EdgeType
 from core.metrics import metrics
 from core.mock_data import mock_data_generator
+from config import AWS_ENDPOINT_URL, USE_MOCK_DATA, AWS_REGION
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class AWSIngester:
@@ -23,13 +30,21 @@ class AWSIngester:
         self._iam_client = None
         self._cloudtrail_client = None
         self._initialized = False
+        self._policy_cache = {}  # Cache for parsed policy documents
     
     @property
     def iam(self):
         """Lazy-load IAM client"""
         if self._iam_client is None:
             try:
-                self._iam_client = boto3.client('iam', region_name=self.region)
+                endpoint = AWS_ENDPOINT_URL if not USE_MOCK_DATA else None
+                self._iam_client = boto3.client(
+                    'iam', 
+                    region_name=self.region,
+                    endpoint_url=endpoint,
+                    aws_access_key_id="test",
+                    aws_secret_access_key="test"
+                )
                 self._initialized = True
             except NoCredentialsError:
                 raise RuntimeError("AWS credentials not configured")
@@ -40,7 +55,14 @@ class AWSIngester:
         """Lazy-load CloudTrail client"""
         if self._cloudtrail_client is None:
             try:
-                self._cloudtrail_client = boto3.client('cloudtrail', region_name=self.region)
+                endpoint = AWS_ENDPOINT_URL if not USE_MOCK_DATA else None
+                self._cloudtrail_client = boto3.client(
+                    'cloudtrail', 
+                    region_name=self.region,
+                    endpoint_url=endpoint,
+                    aws_access_key_id="test",
+                    aws_secret_access_key="test"
+                )
             except NoCredentialsError:
                 raise RuntimeError("AWS credentials not configured")
         return self._cloudtrail_client
@@ -71,7 +93,7 @@ class AWSIngester:
                     self._ingest_user_policies(user['UserName'])
                     
         except ClientError as e:
-            print(f"Error ingesting users: {e}")
+            logger.error(f"Error ingesting users: {e}")
         
         return count
     
@@ -109,7 +131,7 @@ class AWSIngester:
                     self._ingest_role_policies(role['RoleName'])
                     
         except ClientError as e:
-            print(f"Error ingesting roles: {e}")
+            logger.error(f"Error ingesting roles: {e}")
         
         return count
     
@@ -136,7 +158,7 @@ class AWSIngester:
                     count += 1
                     
         except ClientError as e:
-            print(f"Error ingesting policies: {e}")
+            logger.error(f"Error ingesting policies: {e}")
         
         return count
     
@@ -165,7 +187,7 @@ class AWSIngester:
                     self._ingest_group_members(group['GroupName'])
                     
         except ClientError as e:
-            print(f"Error ingesting groups: {e}")
+            logger.error(f"Error ingesting groups: {e}")
         
         return count
     
@@ -178,6 +200,9 @@ class AWSIngester:
                 policy_id = f"policy:{policy['PolicyName']}"
                 user_id = f"user:{username}"
                 identity_graph.add_edge(user_id, policy_id, EdgeType.HAS_POLICY)
+                
+                # Parse policy for additional edges (AssumeRole, PassRole)
+                self._parse_and_ingest_policy_permissions(user_id, policy['PolicyArn'])
         except ClientError:
             pass
     
@@ -189,6 +214,9 @@ class AWSIngester:
                 policy_id = f"policy:{policy['PolicyName']}"
                 role_id = f"role:{role_name}"
                 identity_graph.add_edge(role_id, policy_id, EdgeType.HAS_POLICY)
+                
+                # Parse policy for additional edges
+                self._parse_and_ingest_policy_permissions(role_id, policy['PolicyArn'])
         except ClientError:
             pass
     
@@ -223,12 +251,114 @@ class AWSIngester:
         """Add edges from users to their groups"""
         try:
             response = self.iam.get_group(GroupName=group_name)
+            group_id = f"group:{group_name}"
+            
+            # Group's policies affect all members
+            attached = self.iam.list_attached_group_policies(GroupName=group_name)
+            for policy in attached.get('AttachedPolicies', []):
+                identity_graph.add_edge(group_id, f"policy:{policy['PolicyName']}", EdgeType.HAS_POLICY)
+            
             for user in response.get('Users', []):
                 user_id = f"user:{user['UserName']}"
-                group_id = f"group:{group_name}"
                 identity_graph.add_edge(user_id, group_id, EdgeType.MEMBER_OF)
+                
+                # Users inherit group permissions
+                for policy in attached.get('AttachedPolicies', []):
+                    self._parse_and_ingest_policy_permissions(user_id, policy['PolicyArn'])
+                    
         except ClientError:
             pass
+
+    def _parse_and_ingest_policy_permissions(self, entity_id: str, policy_arn: str) -> None:
+        """Parse policy JSON to find logical escalation edges"""
+        # Check cache first
+        if policy_arn in self._policy_cache:
+            self._apply_policy_edges(entity_id, self._policy_cache[policy_arn])
+            return
+
+        try:
+            # Skip AWS service-linked policies
+            if ":policy/aws-service-role/" in policy_arn:
+                return
+            
+            logger.debug(f"Parsing policy {policy_arn} for {entity_id}")
+            policy = self.iam.get_policy(PolicyArn=policy_arn)
+            version_id = policy['Policy']['DefaultVersionId']
+            version = self.iam.get_policy_version(PolicyArn=policy_arn, VersionId=version_id)
+            document = version['PolicyVersion']['Document']
+            
+            # Handle document as string or dict
+            if isinstance(document, str):
+                import urllib.parse
+                try:
+                    # Sometimes it's URL encoded
+                    if '%' in document:
+                        document = json.loads(urllib.parse.unquote(document))
+                    else:
+                        document = json.loads(document)
+                except Exception:
+                    logger.warning(f"Failed to parse policy JSON: {policy_arn}")
+                    return
+
+            if not isinstance(document, dict):
+                return
+
+            # Store in cache
+            self._policy_cache[policy_arn] = document
+            
+            # Apply edges
+            self._apply_policy_edges(entity_id, document)
+
+        except Exception as e:
+            logger.error(f"Error parsing policy {policy_arn}: {e}")
+
+    def _apply_policy_edges(self, entity_id: str, document: dict) -> None:
+        """Apply edges from a successfully parsed policy document"""
+        statements = document.get('Statement', [])
+        if isinstance(statements, dict):
+            statements = [statements]
+        
+        for stmt in statements:
+            if stmt.get('Effect') != 'Allow':
+                continue
+            
+            actions = stmt.get('Action', [])
+            if isinstance(actions, str):
+                actions = [actions]
+            # Normalize to lowercase for robust matching
+            actions = [a.lower() for a in actions]
+            
+            resources = stmt.get('Resource', [])
+            if isinstance(resources, str):
+                resources = [resources]
+            
+            # Detect AssumeRole (case-insensitive checks)
+            if any(a in actions for a in ['sts:assumerole', 'sts:*', '*']):
+                for res in resources:
+                    if ':role/' in res:
+                        role_name = res.split('/')[-1].replace('*', '')
+                        if role_name:
+                            target_id = f"role:{role_name}"
+                            logger.debug(f"Adding CAN_ASSUME edge: {entity_id} -> {target_id}")
+                            identity_graph.add_edge(entity_id, target_id, EdgeType.CAN_ASSUME)
+
+            # Detect PassRole + RunInstances (EC2 Escalation)
+            has_passrole = any(a in actions for a in ['iam:passrole', 'iam:*', '*'])
+            has_runinstances = any(a in actions for a in ['ec2:runinstances', 'ec2:*', '*'])
+            
+            if has_passrole and has_runinstances:
+                logger.info(f"Detected PassRole+RunInstances escalation capability for {entity_id}")
+                self._link_to_ec2_assumable_roles(entity_id)
+
+    def _link_to_ec2_assumable_roles(self, entity_id: str) -> None:
+        """Find roles that EC2 can assume and link to them (representing PassRole escalation)"""
+        # Optimize: reuse current graph state instead of calling to_dict every time
+        for n_id in identity_graph.graph.nodes:
+            node_data = identity_graph.graph.nodes[n_id]
+            if node_data.get('node_type') == NodeType.IAM_ROLE.value:
+                role_name = node_data.get('name', '')
+                if 'EC2' in role_name or 'Admin' in role_name:
+                    identity_graph.add_edge(entity_id, n_id, EdgeType.CAN_ASSUME)
     
     def _calculate_user_privilege(self, username: str) -> int:
         """Calculate privilege level for a user (0-100)"""
@@ -260,12 +390,14 @@ class AWSIngester:
         role_lower = role_name.lower()
         if 'admin' in role_lower or 'root' in role_lower or 'super' in role_lower:
             privilege = max(privilege, 95)
-        elif 'power' in role_lower or 'engineer' in role_lower or 'production' in role_lower:
+        elif 'power' in role_lower or 'engineer' in role_lower or 'production' in role_lower or 'maintenance' in role_lower:
             privilege = max(privilege, 75)
         elif 'billing' in role_lower or 'security' in role_lower or 'auditor' in role_lower:
             privilege = max(privilege, 65)
         elif 'readonly' in role_lower or 'viewer' in role_lower:
             privilege = max(privilege, 25)
+        elif 'ec2' in role_lower:
+            privilege = max(privilege, 50)
         
         # Check attached policies for high privilege
         try:
@@ -324,14 +456,14 @@ class AWSIngester:
                 metrics.record_event_processed()
                 
         except ClientError as e:
-            print(f"Error fetching CloudTrail events: {e}")
+            logger.error(f"Error fetching CloudTrail events: {e}")
         
         return events
     
     def ingest_all(self) -> dict:
         """Full ingestion of all IAM entities"""
         # Check for simulation mode
-        if os.getenv("USE_MOCK_DATA", "false").lower() == "true":
+        if USE_MOCK_DATA:
             return self.ingest_mock_data()
 
         results = {
@@ -346,7 +478,7 @@ class AWSIngester:
 
     def ingest_mock_data(self) -> dict:
         """Ingest mock IAM data for development/testing (no AWS costs)"""
-        print("Using mock data mode - no AWS API calls will be made")
+        logger.info("Using mock data mode - no AWS API calls will be made")
 
         # Generate mock dataset
         mock_data = mock_data_generator.generate_full_dataset()

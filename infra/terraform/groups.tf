@@ -24,6 +24,14 @@ resource "aws_iam_group" "contractors" {
   name = "Contractors"
 }
 
+resource "aws_iam_group" "devops" {
+  name = "DevOps"
+}
+
+resource "aws_iam_group" "security" {
+  name = "Security"
+}
+
 # === Policy Attachments ===
 
 # Engineering: PowerUserAccess
@@ -78,4 +86,14 @@ resource "aws_iam_policy" "restricted_contractor" {
 resource "aws_iam_group_policy_attachment" "contractors_policy" {
   group      = aws_iam_group.contractors.name
   policy_arn = aws_iam_policy.restricted_contractor.arn
+}
+
+resource "aws_iam_group_policy_attachment" "devops_policy" {
+  group      = aws_iam_group.devops.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "security_policy" {
+  group      = aws_iam_group.security.name
+  policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
 }
