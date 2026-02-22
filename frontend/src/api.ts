@@ -6,7 +6,7 @@ const API_BASE = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_BASE_URL 
 // Create axios instance for cleaner configuration
 const client = axios.create({
     baseURL: API_BASE,
-    timeout: 10000,
+    timeout: 60000,
     headers: {
         'Content-Type': 'application/json'
     }
