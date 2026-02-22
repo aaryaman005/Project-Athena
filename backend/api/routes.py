@@ -24,6 +24,11 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Invalid or expired token")
     return payload
 
+def check_admin(current_user: dict = Depends(get_current_user)):
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Administrative privileges required")
+    return current_user
+
 # ============ Auth Endpoints ============
 
 @router.post("/auth/login")
@@ -36,6 +41,46 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
         data={"sub": user["username"], "role": user["role"]}
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/auth/register")
+def register(username: str, password: str):
+    """Register a new user (Public)"""
+    if auth_manager.get_user(username):
+        raise HTTPException(status_code=400, detail="Username already exists")
+    
+    success = auth_manager.create_user(username, password)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to create user")
+    
+    return {"status": "success", "message": "User registered successfully"}
+
+
+@router.get("/auth/users")
+def list_users(admin: dict = Depends(check_admin)):
+    """List all registered users (Admin only)"""
+    return {"users": auth_manager.list_users()}
+
+
+@router.delete("/auth/users/{username}")
+def delete_user(username: str, admin: dict = Depends(check_admin)):
+    """Remove a user from the system (Admin only)"""
+    if username == "admin":
+        raise HTTPException(status_code=400, detail="Cannot delete default admin account")
+    
+    if not auth_manager.delete_user(username):
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"status": "success", "message": f"User {username} deleted"}
+
+
+@router.patch("/auth/users/{username}/role")
+def update_user_role(username: str, role: str, admin: dict = Depends(check_admin)):
+    """Change a user's role (Admin only)"""
+    if not auth_manager.update_user_role(username, role):
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"status": "success", "message": f"User {username} role updated to {role}"}
 
 
 # ============ Graph Endpoints ============

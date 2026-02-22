@@ -45,6 +45,32 @@ class AuthManager:
         self._save_users()
         return True
 
+    def list_users(self) -> list:
+        """Return a list of all users (excluding sensitive data)"""
+        return [
+            {"username": u["username"], "role": u["role"]}
+            for u in self._users.values()
+        ]
+
+    def delete_user(self, username: str) -> bool:
+        """Delete a user by username"""
+        if username == "admin":
+            return False  # Protect the default admin
+        
+        if username in self._users:
+            del self._users[username]
+            self._save_users()
+            return True
+        return False
+
+    def update_user_role(self, username: str, new_role: str) -> bool:
+        """Update a user's role"""
+        if username in self._users:
+            self._users[username]["role"] = new_role
+            self._save_users()
+            return True
+        return False
+
     def get_user(self, username: str) -> Optional[dict]:
         return self._users.get(username)
 

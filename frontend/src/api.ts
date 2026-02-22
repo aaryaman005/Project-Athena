@@ -141,5 +141,26 @@ export const api = {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         })
         return res.data
+    },
+
+    async register(username: string, password: string) {
+        const res = await client.post(`/api/auth/register?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+        return res.data
+    },
+
+    // Admin User Management
+    async listUsers() {
+        const res = await client.get('/api/auth/users')
+        return res.data
+    },
+
+    async deleteUser(username: string) {
+        const res = await client.delete(`/api/auth/users/${encodeURIComponent(username)}`)
+        return res.data
+    },
+
+    async updateUserRole(username: string, role: string) {
+        const res = await client.patch(`/api/auth/users/${encodeURIComponent(username)}/role?role=${encodeURIComponent(role)}`)
+        return res.data
     }
 }
