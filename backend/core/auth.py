@@ -10,7 +10,7 @@ from passlib.context import CryptContext
 from typing import Optional, Dict
 import config
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 class AuthManager:
     def __init__(self, db_path: str = "users.json"):
