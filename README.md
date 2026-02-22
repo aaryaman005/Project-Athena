@@ -93,6 +93,32 @@ Project-Athena/
 └── frontend/                # React dashboard
 ```
 
+## Production Deployment
+
+Project Athena is containerized for production using Docker & Docker Compose.
+
+### Quick Start (Docker)
+
+1. **Configure Environment**:
+   Create a `.env` file in the root or set the following variables:
+   - `JWT_SECRET`: Secure secret for authentication.
+   - `USE_MOCK_DATA`: Set to `True` for simulation, `False` for live AWS.
+
+2. **Launch Services**:
+   ```bash
+   docker-compose -f docker-compose.prod.yml up --build -d
+   ```
+
+3. **Access Platform**:
+   - **Frontend**: http://localhost (Nginx on Port 80)
+   - **API Backend**: http://localhost:5000
+   - **LocalStack**: http://localhost:4566
+
+### Architecture Components
+- **Backend**: FastAPI service running on Python 3.11.
+- **Frontend**: React/Vite app served via Nginx.
+- **Simulation**: LocalStack container for IAM/STS mocking.
+
 ## License
 
 MIT
