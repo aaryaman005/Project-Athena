@@ -27,6 +27,7 @@ Containment / Mitigation / Alert
 - **Human-in-the-Loop**: High-risk actions require approval
 - **Prometheus Metrics**: Production-ready observability
 - **Live AWS Data**: Real IAM/CloudTrail integration via Boto3
+- **System Health & Docs**: Integrated telemetry monitoring and platform documentation pages
 
 ## Tech Stack
 
@@ -45,16 +46,19 @@ Containment / Mitigation / Alert
 ```bash
 cd backend
 pip install -r requirements.txt
+# Set environment variables (or use defaults)
+# JWT_SECRET=your-secret PORT=5000 python main.py
 python main.py
 ```
 
-API available at: http://localhost:8000
-Docs at: http://localhost:8000/docs
+API available at: http://localhost:5000
+Docs at: http://localhost:5000/docs
 
 ### Frontend
 
 ```bash
 cd frontend
+# Create .env with VITE_API_BASE_URL=http://localhost:5000
 npm install
 npm run dev
 ```
