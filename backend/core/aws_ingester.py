@@ -2,7 +2,6 @@
 Project Athena - AWS IAM Integration
 Live data ingestion from AWS IAM and CloudTrail, with mock data support
 """
-import os
 import json
 import boto3
 import logging
@@ -12,7 +11,7 @@ from datetime import datetime, timedelta
 from core.graph import identity_graph, IdentityNode, NodeType, EdgeType
 from core.metrics import metrics
 from core.mock_data import mock_data_generator
-from config import AWS_ENDPOINT_URL, USE_MOCK_DATA, AWS_REGION
+from config import AWS_ENDPOINT_URL, USE_MOCK_DATA
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)

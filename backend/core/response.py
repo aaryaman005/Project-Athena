@@ -160,7 +160,7 @@ class ResponseEngine:
                 actor="system_engine",
                 target=plan_id,
                 status="pending",
-                details=f"Plan requires human approval due to high impact."
+                details="Plan requires human approval due to high impact."
             )
         
         return plan

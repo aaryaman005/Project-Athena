@@ -6,8 +6,7 @@ import {
     Shield,
     Globe,
     Zap,
-    Lock,
-    Cpu
+    Lock
 } from 'lucide-react'
 import { gsap } from 'gsap'
 import { api } from '../api'
@@ -43,8 +42,6 @@ function Dashboard() {
 
     const containerRef = useRef<HTMLDivElement>(null)
     const headerRef = useRef<HTMLDivElement>(null)
-    const actionsRef = useRef<HTMLDivElement>(null)
-    const infoRef = useRef<HTMLDivElement>(null)
 
     const [recentAlerts, setRecentAlerts] = useState<Alert[]>([])
     const [load, setLoad] = useState({ cpu: 42, mem: 68, net: 15 })

@@ -1,5 +1,4 @@
 import requests
-import json
 
 API_URL = "http://localhost:5000"
 

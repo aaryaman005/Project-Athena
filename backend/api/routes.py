@@ -3,7 +3,6 @@ Project Athena - API Routes
 RESTful API endpoints for the Athena platform
 """
 import os
-import traceback
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm

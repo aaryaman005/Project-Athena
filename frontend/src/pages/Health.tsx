@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
-    Heart,
     Zap,
     Cpu,
-    Database,
     Server,
     Activity,
-    ShieldCheck,
-    RefreshCw
+    ShieldCheck
 } from 'lucide-react'
 import { api } from '../api'
 
@@ -19,7 +16,6 @@ interface HealthStatus {
 
 function Health() {
     const [health, setHealth] = useState<HealthStatus | null>(null)
-    const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [systemMetrics, setSystemMetrics] = useState({
         cpu: 12,
@@ -43,8 +39,6 @@ function Health() {
         } catch (err) {
             setError('Backend service unreachable')
             setHealth(null)
-        } finally {
-            setLoading(false)
         }
     }
 

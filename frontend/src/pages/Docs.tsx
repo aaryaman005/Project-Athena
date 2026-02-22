@@ -1,6 +1,5 @@
-import React from 'react'
+import { useRef, useLayoutEffect } from 'react'
 import {
-    BookOpen,
     Shield,
     Target,
     Zap,

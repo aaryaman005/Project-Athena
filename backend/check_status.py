@@ -1,5 +1,4 @@
 import requests
-import json
 
 try:
     resp = requests.get("http://localhost:5000/health")

@@ -5,8 +5,6 @@ Tracks all system actions, scans, and responses.
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional, List
-import json
-import os
 
 @dataclass
 class AuditLog:
@@ -52,7 +50,7 @@ class AuditLogger:
         print(f"AUDIT LOG: {action} by {actor} on {target} - {status}")
 
     def get_logs(self) -> List[dict]:
-        return [l.to_dict() for l in reversed(self._logs)]
+        return [log.to_dict() for log in reversed(self._logs)]
 
 # Singleton instance
 audit_logger = AuditLogger()
