@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Users, Shield, Trash2, UserPlus, ShieldCheck, ShieldAlert, Loader2, AlertCircle } from 'lucide-react'
+import { Users, Shield, Trash2, ShieldCheck, ShieldAlert, Loader2, AlertCircle } from 'lucide-react'
 import { api } from '../api'
 
 interface UserRecord {
