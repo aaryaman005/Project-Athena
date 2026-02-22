@@ -270,6 +270,9 @@ class AWSIngester:
 
     def _parse_and_ingest_policy_permissions(self, entity_id: str, policy_arn: str) -> None:
         """Parse policy JSON to find logical escalation edges"""
+        if USE_MOCK_DATA:
+            return
+
         # Check cache first
         if policy_arn in self._policy_cache:
             self._apply_policy_edges(entity_id, self._policy_cache[policy_arn])
@@ -361,6 +364,9 @@ class AWSIngester:
     
     def _calculate_user_privilege(self, username: str) -> int:
         """Calculate privilege level for a user (0-100)"""
+        if USE_MOCK_DATA:
+            return 10  # Default mock level
+            
         # Start with base level
         privilege = 10
         
@@ -383,6 +389,9 @@ class AWSIngester:
     
     def _calculate_role_privilege(self, role_name: str) -> int:
         """Calculate privilege level for a role (0-100)"""
+        if USE_MOCK_DATA:
+            return 20  # Default mock level
+            
         privilege = 20
         
         # Check role name keywords

@@ -96,7 +96,7 @@ const Register: React.FC = () => {
                     border: '1px solid rgba(255, 255, 255, 0.15)',
                     boxShadow: '0 50px 120px rgba(0, 0, 0, 1)',
                     borderRadius: '32px',
-                    pointerEvents: 'auto'
+                    opacity: 1
                 }}
             >
                 <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
