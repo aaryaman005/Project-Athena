@@ -3,22 +3,72 @@ Project Athena - API Routes
 RESTful API endpoints for the Athena platform
 """
 import os
+import re
 import time
 from typing import Optional
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from pydantic import BaseModel, field_validator
 from core.auth import auth_manager
 
 from core.graph import identity_graph
 from core.aws_ingester import aws_ingester
-from core.detection import detection_engine
+from core.detection import detection_engine, DEFAULT_MIN_PRIVILEGE_DELTA
 from core.response import response_engine
 from core.audit import audit_logger
 from core.metrics import metrics
 
+# Wire detection -> response integration without module-level back imports.
+detection_engine.set_response_plan_handler(response_engine.create_response_plan)
+
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
+RATE_LIMIT_WINDOW_SECONDS = 60
+REGISTER_RATE_LIMIT = 5
+LOGIN_RATE_LIMIT = 20
+_rate_limit_buckets: dict[str, list[float]] = {}
+
+
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+
+    @field_validator("username")
+    @classmethod
+    def validate_username(cls, value: str) -> str:
+        value = value.strip()
+        if not re.fullmatch(r"[A-Za-z0-9_.-]{3,32}", value):
+            raise ValueError("Username must be 3-32 chars and use [A-Za-z0-9_.-]")
+        return value
+
+    @field_validator("password")
+    @classmethod
+    def validate_password(cls, value: str) -> str:
+        if len(value) < 12:
+            raise ValueError("Password must be at least 12 characters")
+        checks = [
+            re.search(r"[A-Z]", value),
+            re.search(r"[a-z]", value),
+            re.search(r"[0-9]", value),
+            re.search(r"[^A-Za-z0-9]", value),
+        ]
+        if not all(checks):
+            raise ValueError("Password must include upper, lower, number, and special character")
+        return value
+
+
+def _enforce_rate_limit(key: str, max_requests: int) -> None:
+    now = time.time()
+    window_start = now - RATE_LIMIT_WINDOW_SECONDS
+    attempts = _rate_limit_buckets.get(key, [])
+    attempts = [attempt for attempt in attempts if attempt >= window_start]
+
+    if len(attempts) >= max_requests:
+        raise HTTPException(status_code=429, detail="Too many requests. Try again later.")
+
+    attempts.append(now)
+    _rate_limit_buckets[key] = attempts
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
     payload = auth_manager.verify_token(token)
@@ -34,7 +84,10 @@ def check_admin(current_user: dict = Depends(get_current_user)):
 # ============ Auth Endpoints ============
 
 @router.post("/auth/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends()):
+def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends()):
+    client_ip = request.client.host if request.client else "unknown"
+    _enforce_rate_limit(f"login:{client_ip}", LOGIN_RATE_LIMIT)
+
     user = auth_manager.get_user(form_data.username)
     if not user or not auth_manager.verify_password(form_data.password, user["hashed_password"]):
         raise HTTPException(status_code=401, detail="Incorrect username or password")
@@ -46,8 +99,14 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 @router.post("/auth/register")
-def register(username: str, password: str):
+def register(payload: RegisterRequest, request: Request):
     """Register a new user (Public)"""
+    client_ip = request.client.host if request.client else "unknown"
+    _enforce_rate_limit(f"register:{client_ip}", REGISTER_RATE_LIMIT)
+
+    username = payload.username
+    password = payload.password
+
     if auth_manager.get_user(username):
         raise HTTPException(status_code=400, detail="Username already exists")
     
@@ -174,7 +233,7 @@ def get_cloudtrail_events(hours: int = 24):
 # ============ Detection Endpoints ============
 
 @router.post("/detect/scan")
-def scan_for_attacks(start_node: Optional[str] = None, min_delta: int = 20, current_user: dict = Depends(get_current_user)):
+def scan_for_attacks(start_node: Optional[str] = None, min_delta: int = DEFAULT_MIN_PRIVILEGE_DELTA, current_user: dict = Depends(get_current_user)):
     """Scan for privilege escalation attack paths"""
     paths = detection_engine.find_escalation_paths(
         start_node=start_node,
@@ -219,21 +278,21 @@ def get_alert(alert_id: str):
 # ============ Response Endpoints ============
 
 @router.get("/response/pending")
-def get_pending_responses():
+def get_pending_responses(admin: dict = Depends(check_admin)):
     """Get response plans pending human approval"""
     pending = response_engine.get_pending_approvals()
     return {"pending": pending, "count": len(pending)}
 
 
 @router.get("/response/history")
-def get_response_history():
+def get_response_history(admin: dict = Depends(check_admin)):
     """Get historical response actions"""
     history = response_engine.get_response_history()
     return {"history": history, "count": len(history)}
 
 
 @router.post("/response/approve/{plan_id}")
-def approve_response(plan_id: str, current_user: dict = Depends(get_current_user)):
+def approve_response(plan_id: str, admin: dict = Depends(check_admin)):
     """Approve a pending response plan"""
     result = response_engine.approve_plan(plan_id)
     if "error" in result:
@@ -242,7 +301,7 @@ def approve_response(plan_id: str, current_user: dict = Depends(get_current_user
 
 
 @router.post("/response/reject/{plan_id}")
-def reject_response(plan_id: str, reason: str = "Rejected by analyst", current_user: dict = Depends(get_current_user)):
+def reject_response(plan_id: str, reason: str = "Rejected by analyst", admin: dict = Depends(check_admin)):
     """Reject a pending response plan"""
     result = response_engine.reject_plan(plan_id, reason)
     if "error" in result:
@@ -251,7 +310,7 @@ def reject_response(plan_id: str, reason: str = "Rejected by analyst", current_u
 
 
 @router.post("/response/execute/{plan_id}")
-def execute_response(plan_id: str, current_user: dict = Depends(get_current_user)):
+def execute_response(plan_id: str, admin: dict = Depends(check_admin)):
     """Execute an approved response plan"""
     result = response_engine.execute_plan(plan_id)
     if "error" in result:
@@ -260,7 +319,7 @@ def execute_response(plan_id: str, current_user: dict = Depends(get_current_user
 
 
 @router.post("/response/rollback/{action_id}")
-def rollback_action(action_id: str, current_user: dict = Depends(get_current_user)):
+def rollback_action(action_id: str, admin: dict = Depends(check_admin)):
     """Rollback a previously executed action"""
     result = response_engine.rollback_action(action_id)
     if "error" in result:
@@ -277,7 +336,7 @@ def rollback_action(action_id: str, current_user: dict = Depends(get_current_use
 # ============ Audit Endpoints ============
 
 @router.get("/audit/logs")
-def get_audit_logs():
+def get_audit_logs(admin: dict = Depends(check_admin)):
     """Get system audit logs"""
     return {"logs": audit_logger.get_logs()}
 

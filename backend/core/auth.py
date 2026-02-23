@@ -8,9 +8,11 @@ import jwt
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from typing import Optional, Dict
+import logging
 import config
 
 pwd_context = CryptContext(schemes=["pbkdf2_sha256", "bcrypt"], deprecated="auto")
+logger = logging.getLogger(__name__)
 
 class AuthManager:
     def __init__(self, db_path: str = "users.json"):
@@ -95,6 +97,10 @@ class AuthManager:
 # Singleton instance
 auth_manager = AuthManager()
 
-# Initialize with a default admin user if none exists
-if not auth_manager.get_user("admin"):
-    auth_manager.create_user("admin", "athena-admin-2026", role="admin")
+# Optional bootstrap admin creation for initial setup.
+bootstrap_admin = os.getenv("ATHENA_BOOTSTRAP_ADMIN_USERNAME")
+bootstrap_password = os.getenv("ATHENA_BOOTSTRAP_ADMIN_PASSWORD")
+
+if bootstrap_admin and bootstrap_password and not auth_manager.get_user(bootstrap_admin):
+    auth_manager.create_user(bootstrap_admin, bootstrap_password, role="admin")
+    logger.info("Bootstrap admin account created for '%s'.", bootstrap_admin)

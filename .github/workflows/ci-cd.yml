@@ -39,13 +39,11 @@ jobs:
           pip install ruff
           ruff check .
 
-      # Uncomment when you add pytest tests
-      # - name: Run tests
-      #   run: pytest --tb=short
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Run tests
+        run: pytest --tb=short
+        env:
+          USE_MOCK_DATA: "true"
+          JWT_SECRET: "ci-test-jwt-secret-do-not-use-in-production"
 
   # ──────────────────────────────────────────────────────────────────────────────
   # FRONTEND JOB — type-check + build React/Vite app

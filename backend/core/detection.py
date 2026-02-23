@@ -7,10 +7,16 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
 from enum import Enum
+import json
+from pathlib import Path
 
 from core.graph import identity_graph
 from core.metrics import metrics
 
+DEFAULT_MIN_PRIVILEGE_DELTA = 20
+LOW_PRIVILEGE_THRESHOLD = 50
+MAX_RECOMMENDATIONS = 5
+DETECTED_PATHS_FILE = Path(__file__).resolve().parent.parent / "detected_paths.json"
 
 class Severity(Enum):
     """Alert severity levels"""
@@ -60,11 +66,13 @@ class DetectionEngine:
     def __init__(self):
         self._detected_paths: list[AttackPath] = []
         self._path_counter = 0
+        self._response_plan_handler = None
+        self._load_detected_paths()
     
     def find_escalation_paths(
         self,
         start_node: Optional[str] = None,
-        min_privilege_delta: int = 20
+        min_privilege_delta: int = DEFAULT_MIN_PRIVILEGE_DELTA
     ) -> list[AttackPath]:
         """
         Find all privilege escalation paths from a starting node.
@@ -85,6 +93,7 @@ class DetectionEngine:
         
         # Store and return
         self._detected_paths.extend(detected)
+        self._save_detected_paths()
         return detected
     
     def _dfs_escalation(
@@ -133,7 +142,7 @@ class DetectionEngine:
         
         return paths
     
-    def _get_low_privilege_nodes(self, threshold: int = 50) -> list[str]:
+    def _get_low_privilege_nodes(self, threshold: int = LOW_PRIVILEGE_THRESHOLD) -> list[str]:
         """Get all nodes with privilege level below threshold"""
         low_priv = []
         graph_data = identity_graph.to_dict()
@@ -186,9 +195,10 @@ class DetectionEngine:
             auto_response_eligible=auto_eligible
         )
 
-        # Automatically create response plan
-        from core.response import response_engine
-        response_engine.create_response_plan(path)
+        # Automatically create response plan through an injected handler to avoid
+        # runtime imports and module cycles.
+        if self._response_plan_handler:
+            self._response_plan_handler(path)
         
         return path
     
@@ -280,7 +290,7 @@ class DetectionEngine:
             if 'policy:' in node:
                 recommendations.append(f"Audit permissions in {node}")
         
-        return recommendations[:5]  # Limit to 5 recommendations
+        return recommendations[:MAX_RECOMMENDATIONS]
     
     def _is_auto_response_eligible(
         self,
@@ -333,6 +343,60 @@ class DetectionEngine:
         # Sort by confidence (highest first)
         high_priority.sort(key=lambda x: x.confidence_score, reverse=True)
         return [p.to_dict() for p in high_priority]
+
+    def set_response_plan_handler(self, handler) -> None:
+        """Inject response plan creator to avoid circular imports."""
+        self._response_plan_handler = handler
+
+    def _save_detected_paths(self) -> None:
+        data = [path.to_dict() for path in self._detected_paths]
+        with open(DETECTED_PATHS_FILE, "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=2)
+
+    def _load_detected_paths(self) -> None:
+        if not DETECTED_PATHS_FILE.exists():
+            return
+
+        try:
+            with open(DETECTED_PATHS_FILE, "r", encoding="utf-8") as file:
+                data = json.load(file)
+        except (json.JSONDecodeError, OSError):
+            return
+
+        loaded = []
+        max_counter = 0
+        for item in data:
+            severity_raw = item.get("severity", Severity.LOW.value)
+            try:
+                severity = Severity(severity_raw)
+            except ValueError:
+                severity = Severity.LOW
+
+            loaded.append(
+                AttackPath(
+                    path_id=item.get("path_id", ""),
+                    path=item.get("path", []),
+                    source_node=item.get("source_node", ""),
+                    target_node=item.get("target_node", ""),
+                    privilege_delta=item.get("privilege_delta", 0),
+                    confidence_score=item.get("confidence_score", 0.0),
+                    blast_radius=item.get("blast_radius", 0),
+                    severity=severity,
+                    detected_at=datetime.fromisoformat(item.get("detected_at")) if item.get("detected_at") else datetime.now(),
+                    recommended_actions=item.get("recommended_actions", []),
+                    auto_response_eligible=item.get("auto_response_eligible", False),
+                )
+            )
+
+            path_id = item.get("path_id", "")
+            if path_id.startswith("AP-"):
+                try:
+                    max_counter = max(max_counter, int(path_id.split("-")[1]))
+                except (IndexError, ValueError):
+                    continue
+
+        self._detected_paths = loaded
+        self._path_counter = max_counter
 
 
 # Singleton instance

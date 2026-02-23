@@ -6,11 +6,14 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
 from enum import Enum
+import json
+from pathlib import Path
 
 from core.detection import AttackPath, Severity
 from core.metrics import metrics
 from core.audit import audit_logger
 
+RESPONSE_STATE_FILE = Path(__file__).resolve().parent.parent / "response_state.json"
 
 class ActionType(Enum):
     """Types of response actions"""
@@ -47,10 +50,6 @@ class ActionType(Enum):
     ESCALATE_HUMAN = "escalate_human"
     SEND_SLACK_ALERT = "send_slack_alert"
     
-    # 
-    
-
-
 class ActionStatus(Enum):
     """Status of response action"""
     PENDING = "pending"
@@ -119,6 +118,7 @@ class ResponseEngine:
         self._plan_counter = 0
         self._response_history: list[ResponsePlan] = []
         self._pending_approvals: list[ResponsePlan] = []
+        self._load_state()
     
     def create_response_plan(self, attack_path: AttackPath) -> ResponsePlan:
         """
@@ -163,6 +163,7 @@ class ResponseEngine:
                 details="Plan requires human approval due to high impact."
             )
         
+        self._save_state()
         return plan
     
     def _determine_actions(self, attack_path: AttackPath) -> list[ResponseAction]:
@@ -279,6 +280,7 @@ class ResponseEngine:
             status="success",
             details=f"Executed {len(results)} actions."
         )
+        self._save_state()
         
         return {
             "plan_id": plan.plan_id,
@@ -443,7 +445,7 @@ class ResponseEngine:
                 status="failed",
                 details=action.result
             )
-        
+        self._save_state()
         return action.to_dict()
     
     def approve_plan(self, plan_id: str) -> dict:
@@ -462,6 +464,7 @@ class ResponseEngine:
             target=plan_id,
             status="approved"
         )
+        self._save_state()
         
         return {
             "plan_id": plan_id,
@@ -484,6 +487,7 @@ class ResponseEngine:
             status="rejected",
             details=reason
         )
+        self._save_state()
         
         return {
             "plan_id": plan_id,
@@ -505,6 +509,7 @@ class ResponseEngine:
                     action.status = ActionStatus.ROLLED_BACK
                     action.rollback_performed = True
                     action.result += " [ROLLED BACK]"
+                    self._save_state()
                     
                     return {
                         "action_id": action_id,
@@ -534,6 +539,85 @@ class ResponseEngine:
     def get_response_history(self) -> list[dict]:
         """Get all historical response plans"""
         return [p.to_dict() for p in self._response_history]
+
+    def _save_state(self) -> None:
+        data = {
+            "response_history": [plan.to_dict() for plan in self._response_history],
+            "pending_approvals": [plan.to_dict() for plan in self._pending_approvals]
+        }
+        with open(RESPONSE_STATE_FILE, "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=2)
+
+    def _load_state(self) -> None:
+        if not RESPONSE_STATE_FILE.exists():
+            return
+
+        try:
+            with open(RESPONSE_STATE_FILE, "r", encoding="utf-8") as file:
+                data = json.load(file)
+        except (json.JSONDecodeError, OSError):
+            return
+
+        self._response_history = self._deserialize_plans(data.get("response_history", []))
+        self._pending_approvals = self._deserialize_plans(data.get("pending_approvals", []))
+        self._sync_counters()
+
+    def _deserialize_plans(self, plans: list[dict]) -> list[ResponsePlan]:
+        loaded = []
+        for plan in plans:
+            actions = []
+            for action in plan.get("actions", []):
+                action_type_raw = action.get("action_type", ActionType.NOTIFY_SOC.value)
+                action_status_raw = action.get("status", ActionStatus.PENDING.value)
+                try:
+                    action_type = ActionType(action_type_raw)
+                except ValueError:
+                    action_type = ActionType.NOTIFY_SOC
+                try:
+                    action_status = ActionStatus(action_status_raw)
+                except ValueError:
+                    action_status = ActionStatus.PENDING
+
+                actions.append(
+                    ResponseAction(
+                        action_id=action.get("action_id", ""),
+                        action_type=action_type,
+                        target=action.get("target", ""),
+                        status=action_status,
+                        created_at=datetime.fromisoformat(action.get("created_at")) if action.get("created_at") else datetime.now(),
+                        executed_at=datetime.fromisoformat(action.get("executed_at")) if action.get("executed_at") else None,
+                        result=action.get("result"),
+                        reversible=action.get("reversible", True),
+                        rollback_performed=action.get("rollback_performed", False),
+                    )
+                )
+
+            loaded.append(
+                ResponsePlan(
+                    plan_id=plan.get("plan_id", ""),
+                    alert_id=plan.get("alert_id", ""),
+                    actions=actions,
+                    auto_approved=plan.get("auto_approved", False),
+                    human_approved=plan.get("human_approved", False),
+                    created_at=datetime.fromisoformat(plan.get("created_at")) if plan.get("created_at") else datetime.now(),
+                )
+            )
+        return loaded
+
+    def _sync_counters(self) -> None:
+        for plan in self._response_history + self._pending_approvals:
+            if plan.plan_id.startswith("RP-"):
+                try:
+                    self._plan_counter = max(self._plan_counter, int(plan.plan_id.split("-")[1]))
+                except (IndexError, ValueError):
+                    pass
+
+            for action in plan.actions:
+                if action.action_id.startswith("RA-"):
+                    try:
+                        self._action_counter = max(self._action_counter, int(action.action_id.split("-")[1]))
+                    except (IndexError, ValueError):
+                        pass
 
 
 # Singleton instance

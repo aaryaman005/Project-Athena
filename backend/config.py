@@ -1,4 +1,6 @@
+import logging
 import os
+import secrets
 
 # Auto-Response Configuration
 AUTO_RESPONSE_CONFIG = {
@@ -40,6 +42,17 @@ API_PORT = int(os.getenv("PORT", 5000))
 METRICS_ENABLED = os.getenv("METRICS_ENABLED", "True").lower() == "true"
 
 # Security
-JWT_SECRET = os.getenv("JWT_SECRET", "athena-secure-secret-2026-replace-in-prod")
+logger = logging.getLogger(__name__)
+
+JWT_SECRET = os.getenv("JWT_SECRET")
+if not JWT_SECRET:
+    if USE_MOCK_DATA:
+        # Generate an ephemeral secret in mock mode so development still works
+        # without shipping a predictable fallback credential.
+        JWT_SECRET = secrets.token_urlsafe(48)
+        logger.warning("JWT_SECRET not set; using ephemeral secret because USE_MOCK_DATA=true")
+    else:
+        raise RuntimeError("JWT_SECRET must be set when USE_MOCK_DATA=false")
+
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60 * 24))

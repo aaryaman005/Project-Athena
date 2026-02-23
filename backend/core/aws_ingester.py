@@ -5,6 +5,8 @@ Live data ingestion from AWS IAM and CloudTrail, with mock data support
 import json
 import boto3
 import logging
+import os
+import time
 from botocore.exceptions import ClientError, NoCredentialsError
 from datetime import datetime, timedelta
 
@@ -37,13 +39,17 @@ class AWSIngester:
         if self._iam_client is None:
             try:
                 endpoint = AWS_ENDPOINT_URL if not USE_MOCK_DATA else None
-                self._iam_client = boto3.client(
-                    'iam', 
-                    region_name=self.region,
-                    endpoint_url=endpoint,
-                    aws_access_key_id="test",
-                    aws_secret_access_key="test"
-                )
+                client_kwargs = {
+                    "region_name": self.region,
+                    "endpoint_url": endpoint
+                }
+                access_key = os.getenv("AWS_ACCESS_KEY_ID")
+                secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+                if access_key and secret_key:
+                    client_kwargs["aws_access_key_id"] = access_key
+                    client_kwargs["aws_secret_access_key"] = secret_key
+
+                self._iam_client = boto3.client("iam", **client_kwargs)
                 self._initialized = True
             except NoCredentialsError:
                 raise RuntimeError("AWS credentials not configured")
@@ -55,13 +61,17 @@ class AWSIngester:
         if self._cloudtrail_client is None:
             try:
                 endpoint = AWS_ENDPOINT_URL if not USE_MOCK_DATA else None
-                self._cloudtrail_client = boto3.client(
-                    'cloudtrail', 
-                    region_name=self.region,
-                    endpoint_url=endpoint,
-                    aws_access_key_id="test",
-                    aws_secret_access_key="test"
-                )
+                client_kwargs = {
+                    "region_name": self.region,
+                    "endpoint_url": endpoint
+                }
+                access_key = os.getenv("AWS_ACCESS_KEY_ID")
+                secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+                if access_key and secret_key:
+                    client_kwargs["aws_access_key_id"] = access_key
+                    client_kwargs["aws_secret_access_key"] = secret_key
+
+                self._cloudtrail_client = boto3.client("cloudtrail", **client_kwargs)
             except NoCredentialsError:
                 raise RuntimeError("AWS credentials not configured")
         return self._cloudtrail_client
@@ -298,7 +308,7 @@ class AWSIngester:
                         document = json.loads(urllib.parse.unquote(document))
                     else:
                         document = json.loads(document)
-                except Exception:
+                except json.JSONDecodeError:
                     logger.warning(f"Failed to parse policy JSON: {policy_arn}")
                     return
 
@@ -311,7 +321,24 @@ class AWSIngester:
             # Apply edges
             self._apply_policy_edges(entity_id, document)
 
-        except Exception as e:
+        except ClientError as e:
+            error_code = e.response.get("Error", {}).get("Code", "")
+            if error_code in {"Throttling", "RequestLimitExceeded", "ServiceUnavailable"}:
+                for attempt in range(1, 4):
+                    time.sleep(0.3 * attempt)
+                    try:
+                        policy = self.iam.get_policy(PolicyArn=policy_arn)
+                        version_id = policy["Policy"]["DefaultVersionId"]
+                        version = self.iam.get_policy_version(PolicyArn=policy_arn, VersionId=version_id)
+                        document = version["PolicyVersion"]["Document"]
+                        if isinstance(document, dict):
+                            self._policy_cache[policy_arn] = document
+                            self._apply_policy_edges(entity_id, document)
+                            return
+                    except ClientError:
+                        continue
+            logger.error(f"Error parsing policy {policy_arn}: {e}")
+        except (KeyError, TypeError, ValueError) as e:
             logger.error(f"Error parsing policy {policy_arn}: {e}")
 
     def _apply_policy_edges(self, entity_id: str, document: dict) -> None:

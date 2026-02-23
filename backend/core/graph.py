@@ -10,6 +10,8 @@ from datetime import datetime
 
 from core.metrics import metrics
 
+PRIVILEGE_MIN = 0
+PRIVILEGE_MAX = 100
 
 class NodeType(Enum):
     """Types of nodes in the identity graph"""
@@ -39,7 +41,7 @@ class IdentityNode:
     name: str
     arn: str
     created_at: datetime = field(default_factory=datetime.now)
-    privilege_level: int = 0  # 0-100, higher = more privileged
+    privilege_level: int = PRIVILEGE_MIN  # PRIVILEGE_MIN-PRIVILEGE_MAX, higher is more privileged
     metadata: dict = field(default_factory=dict)
 
 
