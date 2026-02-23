@@ -6,19 +6,17 @@ interface LayoutProps {
     children: ReactNode
 }
 
+interface LayoutMenuItem {
+    label: string
+    ariaLabel: string
+    link?: string
+    onClick?: () => void
+}
+
 function Layout({ children }: LayoutProps) {
     const { user, logout } = useAuth()
 
-    const menuItems = [
-        {
-            label: 'Logout',
-            ariaLabel: 'Sign out of Athena',
-            onClick: () => {
-                if (window.confirm('Are you sure you want to sign out?')) {
-                    logout()
-                }
-            }
-        },
+    const menuItems: LayoutMenuItem[] = [
         { label: 'Dashboard', ariaLabel: 'Security overview', link: '/' },
         { label: 'Graph Explorer', ariaLabel: 'Identity and attack path graph', link: '/graph' },
         { label: 'Attack Alerts', ariaLabel: 'View detected threats', link: '/alerts' },
@@ -35,6 +33,17 @@ function Layout({ children }: LayoutProps) {
         })
     }
 
+    // Add Logout at the end
+    menuItems.push({
+        label: 'Logout',
+        ariaLabel: 'Sign out of Athena',
+        onClick: () => {
+            if (window.confirm('Are you sure you want to sign out?')) {
+                logout()
+            }
+        }
+    })
+
     const socialItems = [
         { label: 'System Health', link: '/health' },
         { label: 'Documentation', link: '/docs' },
@@ -48,8 +57,8 @@ function Layout({ children }: LayoutProps) {
                     items={menuItems}
                     socialItems={socialItems}
                     displayItemNumbering
-                    accentColor="#5227FF"
-                    colors={['#1a1b1e', '#2c2e33', '#5227FF']}
+                    accentColor="#3B82F6"
+                    colors={['#1a1b1e', '#2c2e33', '#3B82F6']}
                 />
                 {children}
             </main>

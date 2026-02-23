@@ -10,7 +10,6 @@ import {
 } from 'lucide-react'
 import { gsap } from 'gsap'
 import { api } from '../api'
-import Prism from '../components/Prism'
 
 interface Stats {
     totalNodes: number
@@ -143,26 +142,17 @@ function Dashboard() {
 
     return (
         <div className="page" ref={containerRef} style={{ maxWidth: '1600px', margin: '0 auto', position: 'relative' }}>
-            {/* High-end Prism Background - Fixed layer */}
+            {/* Minimal backdrop */}
             <div style={{
                 position: 'fixed',
                 top: 0,
                 left: 0,
-                width: '100vw',
-                height: '100vh',
+                width: '100%',
+                height: '100%',
+                background: 'radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.02) 0%, transparent 80%)',
                 zIndex: 0,
-                opacity: 0.3,
-                pointerEvents: 'none',
-                overflow: 'hidden'
-            }}>
-                <Prism
-                    animationType="rotate"
-                    timeScale={0.2}
-                    scale={5}
-                    glow={1.0}
-                    noise={0.1}
-                />
-            </div>
+                pointerEvents: 'none'
+            }}></div>
 
             {/* Content Layer (Above Background) */}
             <div style={{ position: 'relative', zIndex: 1, paddingBottom: '4rem' }}>
@@ -172,10 +162,10 @@ function Dashboard() {
                     <div className="page-header" ref={headerRef} style={{ marginBottom: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
                             <div style={{
-                                background: 'var(--accent-purple)',
+                                background: 'rgba(59, 130, 246, 0.1)',
                                 padding: '0.5rem',
                                 borderRadius: '8px',
-                                boxShadow: '0 0 20px rgba(82, 39, 255, 0.4)'
+                                boxShadow: '0 4px 12px rgba(59, 130, 246, 0.2)'
                             }}>
                                 <Shield size={20} color="white" />
                             </div>
@@ -184,7 +174,7 @@ function Dashboard() {
                                 fontWeight: 700,
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.2em',
-                                color: 'var(--accent-purple)'
+                                color: 'var(--accent-primary)'
                             }}>Command Center</span>
                         </div>
                         <h1 className="page-title" style={{ fontSize: '2.5rem', letterSpacing: '-0.03em', margin: 0 }}>System Overview</h1>
@@ -238,8 +228,8 @@ function Dashboard() {
                             className="hover-bright"
                             style={{
                                 padding: '0.6rem 1rem',
-                                background: 'rgba(82, 39, 255, 0.15)',
-                                border: '1px solid rgba(82, 39, 255, 0.4)',
+                                background: 'rgba(59, 130, 246, 0.1)',
+                                border: '1px solid rgba(59, 130, 246, 0.2)',
                                 borderRadius: '8px',
                                 color: 'white',
                                 fontSize: '0.8rem',
@@ -335,7 +325,7 @@ function Dashboard() {
                     <div className="card" style={{ display: 'flex', flexDirection: 'column', opacity: 1 }}>
                         <div className="card-header" style={{ marginBottom: '1.5rem' }}>
                             <h3 className="card-title">Intelligence Feed</h3>
-                            <Activity size={18} color="var(--accent-purple)" />
+                            <Activity size={18} color="var(--accent-primary)" />
                         </div>
                         <div style={{ flex: 1, overflowY: 'auto', maxHeight: '400px', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                             {recentAlerts.length > 0 ? recentAlerts.map((alert, idx) => (
@@ -353,7 +343,7 @@ function Dashboard() {
                                         <span style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>{alert.timestamp}</span>
                                     </div>
                                     <div style={{ color: 'var(--text-primary)', marginBottom: '0.5rem' }}>{alert.description}</div>
-                                    <code style={{ fontSize: '0.7rem', color: 'var(--accent-purple)' }}>{alert.source_identity}</code>
+                                    <code style={{ fontSize: '0.7rem', color: 'var(--accent-primary)' }}>{alert.source_identity}</code>
                                 </div>
                             )) : (
                                 <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>No active threats detected.</div>
@@ -365,12 +355,12 @@ function Dashboard() {
                     <div className="card" style={{ opacity: 1 }}>
                         <div className="card-header" style={{ marginBottom: '1.5rem' }}>
                             <h3 className="card-title">Security Protocols</h3>
-                            <Shield size={18} color="var(--accent-purple)" />
+                            <Shield size={18} color="var(--accent-primary)" />
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                            <div style={{ padding: '1rem', background: 'rgba(82, 39, 255, 0.05)', borderRadius: '12px', border: '1px solid rgba(82, 39, 255, 0.2)' }}>
+                            <div style={{ padding: '1rem', background: 'rgba(59, 130, 246, 0.05)', borderRadius: '12px', border: '1px solid rgba(59, 130, 246, 0.1)' }}>
                                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginBottom: '0.4rem' }}>
-                                    <Shield size={14} color="var(--accent-purple)" />
+                                    <Shield size={14} color="var(--accent-primary)" />
                                     <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'white' }}>Spartan Defense Active</span>
                                 </div>
                                 <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4, margin: 0 }}>
@@ -415,11 +405,11 @@ function Dashboard() {
                     <div className="card">
                         <div className="card-header" style={{ marginBottom: '1.5rem' }}>
                             <h3 className="card-title">Identity Distribution</h3>
-                            <Globe size={18} color="var(--accent-purple)" />
+                            <Globe size={18} color="var(--accent-primary)" />
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             {[
-                                { label: 'IAM Users', count: Math.floor(stats.identities * 0.7), color: 'var(--accent-purple)' },
+                                { label: 'IAM Users', count: Math.floor(stats.identities * 0.7), color: 'var(--accent-primary)' },
                                 { label: 'IAM Roles', count: Math.floor(stats.identities * 0.2), color: 'var(--accent-blue)' },
                                 { label: 'IAM Groups', count: Math.ceil(stats.identities * 0.1), color: 'var(--accent-green)' }
                             ].map((item, i) => (
