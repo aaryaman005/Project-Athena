@@ -3,7 +3,7 @@ import { Lock, User, AlertCircle, Shield, ArrowLeft } from 'lucide-react'
 import { api } from '../api'
 import { useNavigate, Link } from 'react-router-dom'
 import { gsap } from 'gsap'
-import Prism from '../components/Prism'
+
 
 const Register: React.FC = () => {
     const [username, setUsername] = useState('')
