@@ -144,7 +144,7 @@ export const api = {
     },
 
     async register(username: string, password: string) {
-        const res = await client.post(`/api/auth/register?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+        const res = await client.post('/api/auth/register', { username, password })
         return res.data
     },
 
