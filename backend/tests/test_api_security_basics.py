@@ -1,4 +1,10 @@
+import sys
+from pathlib import Path
+
 from fastapi.testclient import TestClient
+
+# Ensure backend root is importable in CI/pytest environments.
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from main import app
 
